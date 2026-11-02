@@ -25,7 +25,9 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 
 - Benefício, especialidade, bairro e contato aparecem no início.
 - Experiência, Laboratório Kim e centro radiológico apresentam os diferenciais.
-- Três capítulos explicam suporte, personalização e retorno à rotina. Um modelo de implante e coroa se separa e se reúne acompanhando a rolagem. A legenda distingue essa ilustração da prótese protocolo de arcada completa.
+- A abertura tem três cenas fixas: a rolagem gira, aproxima, separa e reúne o implante, enquanto o conteúdo muda dentro da mesma composição.
+- O tratamento também fica fixo na tela em três capítulos: suporte, personalização e retorno à rotina. O progresso da rolagem controla a animação; rolar para cima a reproduz em sentido inverso. A legenda distingue a ilustração de implante unitário da prótese protocolo de arcada completa.
+- Os indicadores de cena permitem ir diretamente a um capítulo. “Pular a animação” leva às histórias dos pacientes. O cabeçalho mantém acesso ao agendamento.
 - Histórias reais de Cida, Pedro e Bárbara, com vídeos em modal; vídeo explicativo da Dra. Fabiana na seção da equipe.
 - Estrutura, equipe, primeira consulta, perguntas frequentes e localização completam o percurso.
 - WhatsApp acessível no cabeçalho, nas seções de decisão e em botão flutuante.
@@ -36,6 +38,7 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 - `src/style.css`: identidade visual e comportamento responsivo.
 - `src/main.js`: navegação, modais, observação da rolagem e contato.
 - `src/dental-scene.js`: modelo procedural e renderização com Three.js.
+- `src/scroll-cinema.js` e `src/cinema.css`: cenas fixas, transições, progresso e navegação da animação.
 - `public/`: identidade, fotos reais e fontes locais.
 - `docs/estrategia.md`: pesquisa, fontes e decisões de conteúdo.
 
@@ -45,10 +48,12 @@ Os botões usam o WhatsApp `+55 11 99263-5157`, confirmado no código do fluxo p
 
 Não há formulário, backend, integração com o webhook do site original, cookies de rastreamento ou gravação de dados pessoais. O evento local `lk:contact` informa a posição do botão e fica disponível para uma futura integração de métricas. Nenhum evento é enviado a serviços externos.
 
-Os vídeos são carregados de `clinicalk.com.br` somente quando solicitados. As fotos, logos e fontes estão locais. O 3D tem alternativa vetorial para falha de WebGL, respeita a preferência por movimento reduzido e pausa fora da área visível ou com a aba oculta. O conteúdo e os links principais são HTML e continuam acessíveis sem a cena 3D.
+Os vídeos são carregados de `clinicalk.com.br` somente quando solicitados. As fotos, logos e fontes estão locais. O 3D tem alternativa vetorial para falha de WebGL e pausa fora da área visível ou com a aba oculta. O conteúdo e os links principais são HTML e continuam acessíveis sem a cena 3D.
+
+As cenas usam rolagem nativa e `position: sticky`, sem interceptar gestos, travar a roda do mouse ou instalar bibliotecas de suavização. Com movimento reduzido, JavaScript desabilitado ou tela com menos de 600px de altura, o conteúdo volta à leitura sequencial. Os painéis que estão fora de cena ficam fora da ordem de foco.
 
 ## Base editorial
 
 Conteúdo factual, identidade e mídia: [site oficial da Clínica LK](https://clinicalk.com.br), consultado em 2 de novembro de 2026. As alegações de experiência e pacientes são as publicadas pela própria clínica. Não foram criados depoimentos, preços, avaliações numéricas ou garantias de resultado.
 
-Referências visuais: [Apple AirPods Pro](https://www.apple.com/airpods-pro/) e [Lusion](https://lusion.co/). A implementação e o modelo 3D são próprios.
+Referências visuais: [Apple AirPods Pro](https://www.apple.com/airpods-pro/) e [Lusion](https://lusion.co/). A interação de rolagem foi refinada a partir de [Möbius](https://mobius.framer.website/), conforme o feedback do projeto. A implementação e o modelo 3D são próprios.

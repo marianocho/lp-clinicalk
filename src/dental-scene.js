@@ -1,6 +1,36 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
+// Each pose is a point on a reversible scroll timeline, rather than elapsed time.
+// [progress, separation, rotation, pitch, roll, scale, lift, screw rotation]
+const INTRO_POSES = [
+  [0, 0.14, -0.45, 0.04, -0.2, 1, 0, 0],
+  [0.2, 0.28, 0.4, 0.09, -0.12, 1.1, 0, 0.5],
+  [0.45, 1.05, 1.7, 0.16, 0.06, 0.8, -0.03, 3.2],
+  [0.64, 0.9, 3.7, -0.03, -0.12, 0.83, -0.03, 5.5],
+  [0.84, 0.35, 5.1, 0.08, -0.17, 1.06, 0, 8],
+  [1, 0.12, 5.85, 0.04, -0.2, 1.04, 0, 9.4],
+];
+const STORY_POSES = [
+  [0, 0.14, -0.45, 0.04, -0.12, 1.02, 0, 0],
+  [0.18, 0.95, 0.4, 0.1, -0.07, 1, -0.08, 2.4],
+  [0.34, 1.24, 1.4, 0.14, 0.05, 1, -0.08, 4.7],
+  [0.5, 1.15, 3.05, 0.18, -0.1, 1.06, -0.08, 6.3],
+  [0.66, 0.92, 4.0, -0.04, -0.07, 1.02, -0.06, 7.8],
+  [0.84, 0.32, 5.3, 0.06, -0.15, 1.13, 0, 10.8],
+  [1, 0.07, 5.85, 0.04, -0.12, 1.16, 0, 12.56],
+];
+
+function samplePose(poses, progress) {
+  const p = THREE.MathUtils.clamp(progress, 0, 1);
+  let next = poses.findIndex((pose) => pose[0] >= p);
+  if (next < 1) next = 1;
+  const a = poses[next - 1];
+  const b = poses[next];
+  const t = THREE.MathUtils.smoothstep(p, a[0], b[0]);
+  return a.map((value, i) => THREE.MathUtils.lerp(value, b[i], t));
+}
+
 // Original procedural illustration: no external 3D asset or runtime CDN required.
 function crownGeometry() {
   const rings = 66;
@@ -213,6 +243,12 @@ export function createDentalScene(container, { dark = false } = {}) {
     expansion: dark ? 0.5 : 0.14,
     targetExpansion: dark ? 0.5 : 0.14,
     targetY: -0.45,
+    targetPitch: 0.04,
+    targetRoll: dark ? -0.12 : -0.2,
+    targetScale: 1,
+    targetLift: 0,
+    targetScrewRotation: 0,
+    timelineControlled: false,
     step: 0,
     pointerX: 0,
     pointerY: 0,
@@ -228,7 +264,7 @@ export function createDentalScene(container, { dark = false } = {}) {
     // Keep the entire illustration in the short mobile storytelling viewport.
     camera.position.set(4.2, 3.0, 8.5);
     camera.position.multiplyScalar(
-      dark ? 1.2 : camera.aspect < 0.85 ? 1.12 : 0.9,
+      dark || innerWidth <= 600 ? 1.2 : camera.aspect < 0.85 ? 1.12 : 0.9,
     );
     camera.lookAt(0, 0.03, 0);
     camera.updateProjectionMatrix();
@@ -254,9 +290,35 @@ export function createDentalScene(container, { dark = false } = {}) {
           0.035,
         )
       : -0.45;
-    model.group.rotation.x = moving ? 0.04 + state.pointerY * 0.1 : 0.04;
-    model.group.rotation.z = dark ? -0.12 : -0.2;
-    model.group.position.y = moving ? Math.sin(time * 0.0008) * 0.045 : 0;
+    model.group.rotation.x = THREE.MathUtils.lerp(
+      model.group.rotation.x,
+      moving ? state.targetPitch + state.pointerY * 0.06 : 0.04,
+      0.08,
+    );
+    model.group.rotation.z = THREE.MathUtils.lerp(
+      model.group.rotation.z,
+      state.targetRoll,
+      0.08,
+    );
+    model.group.scale.setScalar(
+      THREE.MathUtils.lerp(
+        model.group.scale.x,
+        state.targetScale,
+        moving ? 0.08 : 1,
+      ),
+    );
+    const float =
+      moving && !state.timelineControlled ? Math.sin(time * 0.0008) * 0.045 : 0;
+    model.group.position.y = THREE.MathUtils.lerp(
+      model.group.position.y,
+      state.targetLift + float,
+      moving ? 0.08 : 1,
+    );
+    model.screw.rotation.y = THREE.MathUtils.lerp(
+      model.screw.rotation.y,
+      state.targetScrewRotation,
+      moving ? 0.08 : 1,
+    );
     renderer.render(scene, camera);
     if (!once && state.active && moving && !document.hidden)
       state.frame = requestAnimationFrame(renderFrame);
@@ -295,7 +357,35 @@ export function createDentalScene(container, { dark = false } = {}) {
   document.addEventListener("visibilitychange", start);
   reducedMotion.addEventListener("change", start);
   resize();
+  function applyPose(poses, progress) {
+    const [, expansion, rotation, pitch, roll, scale, lift, screwRotation] =
+      samplePose(poses, progress);
+    state.timelineControlled = true;
+    state.targetExpansion = expansion;
+    state.targetY = rotation;
+    state.targetPitch = pitch;
+    state.targetRoll = roll;
+    state.targetScale = scale;
+    state.targetLift = lift;
+    state.targetScrewRotation = screwRotation;
+  }
   return {
+    setIntroProgress(progress) {
+      applyPose(INTRO_POSES, progress);
+    },
+    setTimelineProgress(progress) {
+      applyPose(STORY_POSES, progress);
+    },
+    resetTimeline() {
+      state.timelineControlled = false;
+      state.targetExpansion = dark ? 0.5 : 0.14;
+      state.targetY = -0.45;
+      state.targetPitch = 0.04;
+      state.targetRoll = dark ? -0.12 : -0.2;
+      state.targetScale = 1;
+      state.targetLift = 0;
+      state.targetScrewRotation = 0;
+    },
     setStoryProgress(step, within) {
       state.step = step;
       state.targetExpansion =

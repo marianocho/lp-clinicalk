@@ -57,3 +57,11 @@ No celular, o contato antecede a ilustração. A narrativa usa uma área visual 
 ## Próxima medição
 
 O evento local `lk:contact`, com a posição do CTA, permite integrar métricas depois da definição da ferramenta. Para avaliar a hipótese, acompanhar cliques por seção, conversas iniciadas, avaliações agendadas e qualidade dos contatos. A primeira versão não implementa rastreamento nem reaproveita o webhook de leads da página original.
+
+## Refinamento da interação — referência Möbius
+
+Após a avaliação da primeira versão, o projeto passou a usar https://mobius.framer.website/ como referência de comportamento. A referência foi aberta e percorrida no navegador; a identidade visual da LK foi preservada.
+
+A abertura e a apresentação do tratamento agora usam cenas que permanecem fixas na tela. O deslocamento no documento funciona como uma linha do tempo: controla a rotação e a escala do modelo, a separação e a montagem das peças, a saída e a entrada dos textos. A animação volta ao rolar para cima. A rolagem não é interceptada.
+
+Cada sequência tem três cenas e navegação direta. O tratamento também oferece uma opção para pular a animação. A versão sequencial permanece disponível com movimento reduzido, sem JavaScript ou em telas baixas. No celular, o botão flutuante se recolhe durante a cena do tratamento para liberar os controles; o agendamento permanece no cabeçalho.

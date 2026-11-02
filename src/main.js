@@ -1,4 +1,6 @@
 import "./style.css";
+import "./cinema.css";
+import { createScrollCinema } from "./scroll-cinema.js";
 
 const icons = {
   whatsapp:
@@ -121,20 +123,13 @@ document.querySelectorAll("[data-contact]").forEach((link) => {
   });
 });
 
-const hero = document.querySelector(".hero");
-const contact = document.querySelector("#contato");
-const floating = document.querySelector(".floating-contact");
-const story = document.querySelector(".story");
-const steps = [...document.querySelectorAll(".story-step")];
-const progress = [...document.querySelectorAll(".story-progress span")];
-const label = document.querySelector("#model-label");
-const labels = [
-  "Cada sorriso começa com uma boa base.",
-  "Precisão e personalização, em cada detalhe.",
-  "Um novo sorriso. Novas possibilidades.",
-];
 let heroScene;
 let storyScene;
+const cinema = createScrollCinema({
+  getHeroScene: () => heroScene,
+  getStoryScene: () => storyScene,
+});
+
 async function loadScenes() {
   let createDentalScene;
   try {
@@ -153,67 +148,16 @@ async function loadScenes() {
     storyScene = createDentalScene(document.querySelector("#story-model"), {
       dark: true,
     });
-    requestScrollUpdate();
   } catch {
     const fallback = document.querySelector(".model-fallback").cloneNode(true);
     document.querySelector(".story-visual-inner").append(fallback);
     document.querySelector(".story-visual-inner").classList.add("no-webgl");
   }
+  cinema.refresh();
 }
-
-let scheduled = false;
-let activeStep = -1;
-const updateScroll = () => {
-  scheduled = false;
-  floating.classList.toggle(
-    "visible",
-    hero.getBoundingClientRect().bottom < 80 &&
-      contact.getBoundingClientRect().top > innerHeight * 0.65,
-  );
-  const rect = story.getBoundingClientRect();
-  if (rect.bottom > 0 && rect.top < innerHeight) {
-    const mobile = innerWidth <= 600;
-    const focalY = innerHeight * (mobile ? 0.72 : 0.5);
-    let current = 0;
-    steps.forEach((step, i) => {
-      if (
-        step.querySelector(".chapter-number").getBoundingClientRect().top <
-        focalY
-      )
-        current = i;
-    });
-    const stepRect = steps[current].getBoundingClientRect();
-    const contentTop = steps[current]
-      .querySelector(".chapter-number")
-      .getBoundingClientRect().top;
-    const within = Math.max(
-      0,
-      Math.min(
-        1,
-        (focalY - contentTop) / Math.max(1, stepRect.bottom - contentTop),
-      ),
-    );
-    storyScene?.setStoryProgress(current, within);
-    if (activeStep !== current) {
-      activeStep = current;
-      progress.forEach((el, i) => el.classList.toggle("active", i === current));
-      label.textContent = labels[current];
-    }
-  }
-};
-const requestScrollUpdate = () => {
-  if (!scheduled) {
-    scheduled = true;
-    requestAnimationFrame(updateScroll);
-  }
-};
-addEventListener("scroll", requestScrollUpdate, { passive: true });
-addEventListener("resize", requestScrollUpdate, { passive: true });
-document.fonts.ready.then(requestScrollUpdate);
-updateScroll();
 loadScenes();
 
-// Keep presentation motion in sync if the visitor changes this setting mid-visit.
+// The animation has a complete reading fallback when reduced motion is requested.
 motionPreference.addEventListener("change", () => {
   document.documentElement.classList.toggle(
     "js-motion",
@@ -230,6 +174,7 @@ document.querySelector("#year").textContent = String(new Date().getFullYear());
 
 if (import.meta.hot)
   import.meta.hot.dispose(() => {
+    cinema.dispose();
     heroScene?.dispose();
     storyScene?.dispose();
   });
