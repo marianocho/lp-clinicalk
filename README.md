@@ -26,7 +26,8 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 - Benefício, especialidade, bairro e contato aparecem no início.
 - Experiência, Laboratório Kim e centro radiológico apresentam os diferenciais.
 - A abertura tem três cenas fixas: a rolagem gira, aproxima, separa e reúne o implante, enquanto o conteúdo muda dentro da mesma composição.
-- O tratamento também fica fixo na tela em três capítulos: suporte, personalização e retorno à rotina. O progresso da rolagem controla a animação; rolar para cima a reproduz em sentido inverso. A legenda distingue a ilustração de implante unitário da prótese protocolo de arcada completa.
+- O tratamento fica fixo na tela em três capítulos ligados ao conteúdo: uma arcada com raízes e mandíbula é escaneada em camadas; quatro dentes selecionados se aproximam e se encaixam; a arcada reabilitada abre e fecha com movimento da mandíbula. O progresso da rolagem controla toda a sequência, inclusive o retorno.
+- A abertura usa creme e bege. A sequência do tratamento e o contato usam azul noturno, com contrastes em marfim e champanhe.
 - Os indicadores de cena permitem ir diretamente a um capítulo. “Pular a animação” leva às histórias dos pacientes. O cabeçalho mantém acesso ao agendamento.
 - Histórias reais de Cida, Pedro e Bárbara, com vídeos em modal; vídeo explicativo da Dra. Fabiana na seção da equipe.
 - Estrutura, equipe, primeira consulta, perguntas frequentes e localização completam o percurso.
@@ -38,6 +39,8 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 - `src/style.css`: identidade visual e comportamento responsivo.
 - `src/main.js`: navegação, modais, observação da rolagem e contato.
 - `src/dental-scene.js`: modelo procedural e renderização com Three.js.
+- `src/dental-arch-scene.js`: arcadas superior e inferior, raízes, mandíbula, escaneamento, encaixe e articulação.
+- `src/theme.css`: cores creme e azul noturno.
 - `src/scroll-cinema.js` e `src/cinema.css`: cenas fixas, transições, progresso e navegação da animação.
 - `public/`: identidade, fotos reais e fontes locais.
 - `docs/estrategia.md`: pesquisa, fontes e decisões de conteúdo.

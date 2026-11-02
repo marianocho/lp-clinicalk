@@ -32,9 +32,7 @@ function samplePose(poses, progress) {
 }
 
 // Original procedural illustration: no external 3D asset or runtime CDN required.
-function crownGeometry() {
-  const rings = 66;
-  const segments = 96;
+export function crownGeometry({ rings = 66, segments = 96 } = {}) {
   const profile = new THREE.CatmullRomCurve3([
     new THREE.Vector3(0, 0.31, 0),
     new THREE.Vector3(0.39, 0.32, 0),

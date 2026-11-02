@@ -25,9 +25,9 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
   const floating = document.querySelector(".floating-contact");
   const contact = document.querySelector("#contato");
   const labels = [
-    "Cada sorriso começa com uma boa base.",
-    "Precisão e personalização, em cada detalhe.",
-    "Um novo sorriso. Novas possibilidades.",
+    "Enxergar cada detalhe. Planejar cada etapa.",
+    "Do planejamento ao encaixe de cada dente.",
+    "Harmonia no movimento. Confiança para viver.",
   ];
   let enabled = false;
   let headerHeight = 84;

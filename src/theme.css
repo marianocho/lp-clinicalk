@@ -1,0 +1,167 @@
+:root {
+  --paper: #f1e7d8;
+  --line: #d9cebd;
+  --muted: #66645d;
+  --green-dark: #111c2b;
+  --lime: #e6d3b4;
+}
+.header {
+  background: #f1e7d8f2;
+  border-bottom-color: #d9cebd70;
+}
+.hero,
+.cinematic .hero-pin {
+  background: radial-gradient(
+    ellipse at 82% 50%,
+    #e9dcc6 0%,
+    #eee1ce 32%,
+    var(--paper) 68%
+  );
+}
+.trust-band {
+  background: #e9decd;
+}
+.trust-item + .trust-item {
+  border-color: #d3c6b1;
+}
+.clinic {
+  background: #e8dcc9;
+}
+.clinic-small {
+  background: #f3eada;
+}
+.first-visit {
+  background: #ebdfcd;
+}
+.image-stamp {
+  background: #f1e7d8eb;
+}
+.orbit {
+  border-color: #b5a48838;
+}
+.orbit-two {
+  border-color: #b5a48830;
+}
+.story {
+  color: #ebe6df;
+  background: #111c2b;
+}
+.story .eyebrow {
+  color: #c9d4df;
+}
+.story .section-index {
+  color: #a7bed0;
+}
+.story-top {
+  border-color: #b7c9d11c;
+}
+.story-step h2 {
+  color: #f0e9dd;
+}
+.story-step h2 em {
+  color: #b8cedd;
+}
+.story-step > p {
+  color: #a8b7c6;
+}
+.chapter-number {
+  color: #dec7a2;
+}
+.chapter-number span {
+  color: #7c93a7;
+}
+.chapter-detail {
+  color: #8fa5b8;
+  border-color: #b7c9d126;
+}
+.chapter-detail strong {
+  color: #c9d6e0;
+}
+.chapter-detail svg {
+  color: #cbb18b;
+}
+.story-orbit {
+  border-color: #9cbad024;
+}
+.story-model-label {
+  color: #b1c4d3;
+}
+.story-model-label .status-dot {
+  background: #80bfd1;
+}
+.model-caption {
+  color: #8298aa;
+}
+.skip-cinema {
+  color: #95aec1;
+}
+.skip-cinema:hover {
+  color: #e6d3b4;
+}
+.story-progress button {
+  color: #69849c;
+  border-top-color: #abc0d12d;
+}
+.story-progress button[aria-current] {
+  color: #e6d3b4;
+}
+.cinematic .story-progress > .story-scroll-hint {
+  color: #8fa9bd;
+}
+.button-lime {
+  background: #e6d3b4;
+  color: #142031;
+}
+.button-lime:hover {
+  background: #f1e2cc;
+}
+.contact {
+  background: #111c2b;
+}
+.contact .eyebrow {
+  color: #b4c5d2;
+}
+.contact h2 em,
+.contact-address h3 em {
+  color: #d5bea0;
+}
+.contact-copy > p:not(.eyebrow) {
+  color: #9cabb9;
+}
+.contact-address {
+  border-color: #b8c9d42b;
+}
+.address-icon svg {
+  stroke: #bfcbd4;
+}
+.contact-address address {
+  color: #bec9d3;
+}
+.contact-address p,
+.contact-hint {
+  color: #7e94a8;
+}
+.contact-address .text-link {
+  border-color: #a1b2c366;
+}
+.dialog-close {
+  background: #e2d6c3;
+}
+dialog::backdrop {
+  background: #0d1728df;
+}
+::selection {
+  background: #decaac;
+  color: #142031;
+}
+.arch-fallback {
+  inset: 10% 3% 20%;
+}
+@media (max-width: 600px) {
+  .story-visual {
+    background: #111c2b;
+  }
+  .cinematic .story-visual {
+    background: none;
+  }
+}

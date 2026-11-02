@@ -50,9 +50,9 @@ O serviço de busca web estava indisponível; a pesquisa foi feita pelo navegado
 
 ## Direção visual
 
-Verde profundo, verde sálvia e marfim mantêm vínculo com a identidade da clínica. Jost preserva a fonte de apoio original; Cormorant Garamond cria contraste editorial nos títulos. Fotografias reais aproximam a experiência da equipe e dos pacientes. O 3D é uma ilustração procedural própria, independente de arquivos de modelo externos.
+Creme e bege formam a base da página. Azul noturno destaca o tratamento e o contato. Verde profundo e sálvia permanecem na identidade, nos títulos da abertura e nos botões principais. Jost preserva a fonte de apoio original; Cormorant Garamond cria contraste editorial nos títulos. Fotografias reais aproximam a experiência da equipe e dos pacientes. O 3D é uma ilustração procedural própria, independente de arquivos de modelo externos.
 
-No celular, o contato antecede a ilustração. A narrativa usa uma área visual fixa superior e texto em sequência. O modelo de implante unitário é identificado como ilustração; a legenda explica que a prótese protocolo reabilita uma arcada sobre múltiplos implantes.
+No celular, o contato antecede a ilustração. A narrativa usa uma área visual fixa superior, com conteúdo que muda na mesma posição. Na abertura permanece o implante unitário; no tratamento, a arcada completa contextualiza a leitura. A legenda informa que a animação é ilustrativa e que o tratamento depende de avaliação individual.
 
 ## Próxima medição
 
@@ -65,3 +65,11 @@ Após a avaliação da primeira versão, o projeto passou a usar https://mobius.
 A abertura e a apresentação do tratamento agora usam cenas que permanecem fixas na tela. O deslocamento no documento funciona como uma linha do tempo: controla a rotação e a escala do modelo, a separação e a montagem das peças, a saída e a entrada dos textos. A animação volta ao rolar para cima. A rolagem não é interceptada.
 
 Cada sequência tem três cenas e navegação direta. O tratamento também oferece uma opção para pular a animação. A versão sequencial permanece disponível com movimento reduzido, sem JavaScript ou em telas baixas. No celular, o botão flutuante se recolhe durante a cena do tratamento para liberar os controles; o agendamento permanece no cabeçalho.
+
+## Correspondência entre texto e animação
+
+- **Planejar:** arcadas superior e inferior, raízes e estrutura mandibular em visualização translúcida. Um plano de varredura percorre a dentição em camadas, em referência visual à tomografia.
+- **Personalizar:** quatro dentes anteriores são destacados, aproximados e encaixados nas posições planejadas. A visualização passa gradualmente do exame ilustrativo para a dentição e a gengiva.
+- **Além do sorriso:** os dentes permanecem encaixados. A mandíbula articula duas aberturas e fechamentos acompanhando a rolagem e termina na posição de fechamento. Ao rolar para trás, a mesma sequência é revertida.
+
+Os modelos são ilustrações geométricas, sem dados ou imagens de exames de pacientes. A abertura não exibe mais o texto “Odontologia integrada · Paraíso, SP” nem o link “Descubra como”, conforme solicitado.
