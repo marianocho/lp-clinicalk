@@ -1,0 +1,133 @@
+/* Broad chapters, quiet controls and generous galleries inspired by the
+   reference's product storytelling, in the clinic's own warm palette. */
+.header { backdrop-filter: blur(20px); }
+.header-inner { height: 72px; }
+.header .brand img { width: 136px; }
+.header .button-small { border-radius: 999px; min-height: 38px; padding-inline: 19px; }
+.desktop-nav a { position: relative; }
+.desktop-nav a[aria-current]::after { content: ""; position: absolute; bottom: -24px; height: 2px; background: currentColor; left: 0; right: 0; }
+.section-space { padding-block: clamp(88px, 9vw, 140px); }
+.section-heading h2, .intro h2 { font-family: var(--sans); font-weight: 500; font-size: clamp(40px,4.5vw,64px); letter-spacing: -2.4px; line-height: 1.1; }
+.section-heading h2 em, .intro h2 em { font-family: inherit; font-style: normal; font-weight: inherit; }
+.section-heading { margin-bottom: 52px; }
+.stories > .section-heading { width: min(var(--wrap),calc(100% - 112px)); margin-inline: auto; }
+.stories { overflow: clip; }
+.clinic { background: #e8ddcc; overflow: clip; }
+.gallery { --slide-width: min(80vw, 1080px); }
+.gallery-track, .patient-grid.gallery-track {
+  position: relative; display: flex; gap: 24px; overflow-x: auto; overflow-y: hidden;
+  padding: 4px max(22px,calc((100% - var(--slide-width))/2)) 18px;
+  scroll-padding-inline: max(22px,calc((100% - var(--slide-width))/2));
+  scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch; align-items: stretch;
+}
+.gallery-track::-webkit-scrollbar { display: none; }
+.gallery-track:focus-visible { outline: 2px solid #638070; outline-offset: -3px; }
+.gallery-track > * { flex: 0 0 var(--slide-width); scroll-snap-align: center; }
+.patient-gallery { --slide-width: min(76vw, 440px); }
+.patient-gallery .patient-card { height: 540px; border-radius: 26px; }
+.patient-card:focus-visible { outline-offset: -5px; }
+.patient-card::after { background: linear-gradient(0deg,#101c2be6,transparent 55%,#101c2b44); }
+.patient-bottom { left: 30px; right: 30px; bottom: 30px; }
+.patient-bottom strong { font-family: var(--sans); font-size: 38px; font-weight: 500; letter-spacing: -1px; }
+.patient-top { top: 30px; left: 30px; font-size: 9px; letter-spacing: 1.1px; }
+.gallery-controls { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 16px; }
+.gallery-dots { display: flex; align-items: center; gap: 2px; background: #d9ccba88; padding: 8px 9px; border-radius: 999px; }
+.gallery-dots button { display: grid; place-items: center; width: 30px; height: 28px; padding: 0; background: none; border-radius: 50%; }
+.gallery-dots button::after { content: ""; width: 6px; height: 6px; border-radius: 8px; background: #887f72; transition: width .25s,background .25s; }
+.gallery-dots button[aria-current]::after { width: 20px; background: #344e43; }
+.gallery-count { font-size: 10px; font-variant-numeric: tabular-nums; color: #726a5e; letter-spacing: 1px; min-width: 45px; }
+.gallery-arrows { display: flex; gap: 8px; }
+.gallery-arrows button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #d9ccba99; color: #34483f; font-size: 23px; line-height: 1; transition: background .2s; }
+.gallery-arrows button:hover:enabled { background: #cbbda8; }
+.gallery-arrows button:disabled { opacity: .32; cursor: default; }
+.stories-bottom { margin-top: 35px; }
+.clinic-slide { min-width: 0; height: 620px; position: relative; overflow: hidden; border-radius: 28px; background: #152132; isolation: isolate; }
+.clinic-slide > img { width: 100%; height: 100%; object-fit: cover; object-position: center 42%; position: absolute; inset: 0; z-index: -2; }
+.clinic-slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg,#0c192af5, #0c192a2e 78%); z-index: -1; }
+.clinic-slide-copy { position: absolute; left: 58px; bottom: 54px; right: 58px; color: #f4ecdf; }
+.clinic-slide-copy > span { font-size: 10px; letter-spacing: 1.8px; color: #e6d3b4; }
+.clinic-slide h3 { font-family: var(--sans); font-size: clamp(34px,3.5vw,50px); font-weight: 500; line-height: 1.1; letter-spacing: -1.8px; margin-block: 20px; }
+.clinic-slide p { color: #d3d8de; max-width: 400px; font-size: 15px; line-height: 1.6; }
+.gallery-slide-number { position: absolute; right: 40px; top: 35px; font-size: 10px; letter-spacing: 1px; color: #faf0e2; }
+.story-orbit { display: none; }
+.story { background: radial-gradient(ellipse at 75% 42%, #1c2c41, #101a29 68%); }
+.cinematic .story-visual .dental-canvas { inset: 0 -65px 65px; }
+.dentition-composition { width: 100%; height: 100%; transform-origin: center 53%; }
+.dentition-render { width: 100%; height: 100%; overflow: visible; }
+.dentition-solid { opacity: 0; }
+.dentition-piece { opacity: 0; }
+.piece-solid { opacity: 0; }
+.arch-fallback img, #story-model noscript img { width: 100%; height: 100%; object-fit: contain; }
+.cinematic .story-progress {
+  width: max-content; max-width: calc(100% - 44px); left: 50%; right: auto;
+  transform: translateX(-50%); gap: 5px; bottom: 24px; padding: 7px;
+  border: 1px solid #a4bfce20; border-radius: 999px; background: #223247db;
+  box-shadow: 0 8px 30px #080e1728; backdrop-filter: blur(16px);
+}
+.story-progress button { min-width: 145px; min-height: 43px; padding: 10px 18px; border-top: 0; border-radius: 999px; color: #b7c6d2; font-size: 11px; justify-content: center; }
+.story-progress button[aria-current] { background: #e6d3b4; color: #152132; }
+.story-progress button i, .cinematic .story-progress > .story-scroll-hint { display: none; }
+.story-progress button span { opacity: .55; }
+.cinematic .story-pin { padding-bottom: 105px; }
+.cinematic .story-step h2 { font-family: var(--sans); font-weight: 500; font-size: clamp(41px,4.2vw,59px); letter-spacing: -2px; line-height: 1.1; }
+.cinematic .story-step h2 em { font-family: inherit; font-style: normal; font-weight: inherit; }
+.cinematic .story-step > p { font-size: 15px; line-height: 1.75; max-width: 370px; }
+.cinematic .story-model-label { bottom: 45px; font-size: 10px; }
+.cinematic .model-caption { bottom: 0; font-size: 8px; }
+.visit-grid { gap: 28px; }
+.visit-grid li { border-top: 1px solid #cabb9f; }
+.team-image { border-radius: 26px; }
+@media (min-width: 1600px) { .gallery { --slide-width: 1180px; } .patient-gallery { --slide-width: 490px; } }
+@media (max-width: 850px) {
+  .header-inner { height: 68px; }
+  .header .brand img { width: 118px; }
+  .stories > .section-heading { width: calc(100% - 44px); }
+  .section-heading h2, .intro h2 { font-size: 43px; letter-spacing: -1.7px; }
+  .clinic-slide { height: 540px; }
+  .clinic-slide-copy { left: 32px; right: 32px; bottom: 36px; }
+  .clinic-slide h3 { font-size: 38px; }
+  .gallery { --slide-width: calc(100vw - 72px); }
+  .patient-gallery { --slide-width: min(76vw,400px); }
+}
+@media (max-width: 600px) {
+  .header .button-small { font-size: 10px; min-height: 36px; padding-inline: 13px; }
+  .section-space { padding-block: 80px; }
+  .section-heading { margin-bottom: 34px; gap: 20px; }
+  .section-heading h2, .intro h2 { font-size: 37px; line-height: 1.13; letter-spacing: -1.5px; }
+  .gallery-track, .patient-grid.gallery-track { gap: 16px; }
+  .patient-gallery .patient-card { height: 440px; border-radius: 22px; }
+  .patient-top { top: 24px; left: 23px; font-size: 7px; }
+  .patient-bottom { left: 23px; right: 23px; bottom: 25px; }
+  .patient-bottom strong { font-size: 34px; }
+  .clinic-slide { height: 480px; border-radius: 22px; }
+  .clinic-slide-copy { left: 26px; right: 24px; bottom: 32px; }
+  .clinic-slide-copy > span { font-size: 8px; }
+  .clinic-slide h3 { font-size: 31px; letter-spacing: -1.2px; margin-block: 16px; }
+  .clinic-slide p { font-size: 13px; }
+  .gallery-slide-number { top: 24px; right: 25px; font-size: 8px; }
+  .gallery-controls { gap: 13px; margin-top: 8px; }
+  .gallery-count { font-size: 9px; }
+  .stories-bottom { margin-top: 28px; }
+  .cinematic .story-pin { padding-bottom: 85px; }
+  .cinematic .story-visual { flex-basis: 43%; height: 43%; }
+  .cinematic .story-visual .dental-canvas { inset: -5px -16px 36px; }
+  .cinematic .story-model-label { bottom: 29px; font-size: 7px; }
+  .cinematic .model-caption { font-size: 6px; bottom: 5px; }
+  .cinematic .story-step h2 { font-size: 36px; letter-spacing: -1.25px; line-height: 1.1; }
+  .cinematic .story-step > p { font-size: 13px; line-height: 1.65; margin-top: 17px; }
+  .cinematic .story-progress { width: calc(100% - 44px); bottom: 19px; padding: 6px; gap: 2px; }
+  .story-progress button { min-width: 0; min-height: 41px; font-size: 9px; gap: 5px; padding: 8px 7px; }
+  .cinematic .story-progress button span { font-size: 7px; }
+  .cinematic .chapter-number { font-size: 10px; margin-bottom: 13px; }
+  .cinematic .chapter-detail { margin-top: 18px; padding-top: 13px; }
+}
+@media (max-width: 600px) and (max-height: 740px) {
+  .cinematic .story-visual { flex-basis: 35%; height: 35%; }
+  .cinematic .story-step h2 { font-size: 30px; }
+  .cinematic .story-step > p { font-size: 12px; margin-top: 13px; }
+  .cinematic .chapter-detail { margin-top: 13px; padding-top: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-track { scroll-behavior: auto; }
+}

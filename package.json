@@ -7,7 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
-    "check": "node --check src/main.js && node --check src/dental-scene.js && node --check src/scroll-cinema.js && node --check src/dental-arch-scene.js"
+    "check": "node --check src/main.js && node --check src/dental-scene.js && node --check src/scroll-cinema.js && node --check src/dental-arch-scene.js && node --check src/galleries.js"
   },
   "dependencies": {
     "three": "^0.181.1"

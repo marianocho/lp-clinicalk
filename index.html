@@ -332,13 +332,12 @@
           <div class="story-layout wrap">
             <div class="story-visual">
               <div class="story-visual-inner">
-                <div class="story-orbit" aria-hidden="true"></div>
                 <div
                   class="dental-canvas"
                   id="story-model"
                   role="img"
-                  aria-label="Arcada dentária em 3D sendo escaneada, personalizada e articulada conforme a rolagem"
-                ></div>
+                  aria-label="Dentes em holograma sendo escaneados por raios de luz; quatro dentes se encaixam em uma dentição sólida e fechada conforme a rolagem"
+                ><noscript><img src="/images/dentition-closed-v1.png" alt="Ilustração de uma dentição fechada" /></noscript></div>
                 <div class="story-model-label">
                   <span class="status-dot"></span
                   ><span id="model-label"
@@ -440,7 +439,7 @@
       </section>
 
       <section
-        class="stories section-space wrap"
+        class="stories section-space"
         id="historias"
         aria-labelledby="stories-title"
       >
@@ -459,9 +458,10 @@
             Clínica LK.
           </p>
         </div>
-        <div class="patient-grid">
+        <div class="gallery patient-gallery" data-gallery aria-label="Histórias de pacientes" role="region" aria-roledescription="carrossel">
+        <div class="patient-grid gallery-track" id="patient-gallery" tabindex="0" aria-label="Depoimentos em vídeo">
           <button
-            class="patient-card reveal"
+            class="patient-card"
             data-video="cida"
             aria-label="Assistir ao depoimento de Cida"
           >
@@ -478,7 +478,7 @@
             >
           </button>
           <button
-            class="patient-card reveal"
+            class="patient-card"
             data-video="pedro"
             aria-label="Assistir ao depoimento de Pedro"
           >
@@ -495,7 +495,7 @@
             >
           </button>
           <button
-            class="patient-card reveal"
+            class="patient-card"
             data-video="barbara"
             aria-label="Assistir ao depoimento de Bárbara"
           >
@@ -513,7 +513,13 @@
             >
           </button>
         </div>
-        <div class="stories-bottom">
+        <div class="gallery-controls wrap">
+          <div class="gallery-dots" aria-label="Selecionar depoimento"></div>
+          <span class="gallery-count" aria-live="polite" aria-atomic="true"></span>
+          <div class="gallery-arrows"><button type="button" data-gallery-prev aria-label="Depoimento anterior" aria-controls="patient-gallery">←</button><button type="button" data-gallery-next aria-label="Próximo depoimento" aria-controls="patient-gallery">→</button></div>
+        </div>
+        </div>
+        <div class="stories-bottom wrap">
           <p>
             Pacientes reais da LK. Imagens e vídeos já publicados no site da
             clínica.<br />Cada história é única. Os resultados variam conforme a
@@ -546,61 +552,29 @@
               cuidam de você estão próximas.
             </p>
           </div>
-          <div class="clinic-grid">
-            <article class="clinic-main reveal">
-              <img
-                src="/images/laboratorio.jpg"
-                alt="Profissional do Laboratório Kim planejando uma prótese digital"
-                loading="lazy"
-                width="960"
-                height="680"
-              />
-              <div class="clinic-main-copy">
-                <span>01 — LABORATÓRIO KIM</span>
-                <h3>Seu sorriso não sai<br />do nosso cuidado.</h3>
-                <p>
-                  Um laboratório de prótese dentro da clínica. Dentista e
-                  técnico juntos para dar mais agilidade e personalização ao seu
-                  tratamento.
-                </p>
-              </div>
+        </div>
+        <div class="gallery clinic-gallery" data-gallery aria-label="Estrutura da Clínica LK" role="region" aria-roledescription="carrossel">
+          <div class="gallery-track" id="clinic-gallery" tabindex="0" aria-label="Conheça a estrutura da clínica">
+            <article class="clinic-slide">
+              <img src="/images/laboratorio.jpg" alt="Profissional do Laboratório Kim planejando uma prótese digital" loading="lazy" width="960" height="680" />
+              <div class="clinic-slide-copy"><span>LABORATÓRIO KIM</span><h3>Seu sorriso, pensado<br />em cada detalhe.</h3><p>Um laboratório próprio. Dentista e técnico lado a lado para personalizar seu tratamento.</p></div>
+              <span class="gallery-slide-number" aria-hidden="true">01 / 03</span>
             </article>
-            <div class="clinic-side">
-              <article class="clinic-small reveal">
-                <img
-                  src="/images/radiologia.jpg"
-                  alt="Paciente realizando exame no centro radiológico da Clínica LK"
-                  loading="lazy"
-                  width="600"
-                  height="400"
-                />
-                <div>
-                  <span>02 — CENTRO RADIOLÓGICO</span>
-                  <h3>Mais clareza.<br />Menos deslocamentos.</h3>
-                  <p>
-                    Tomografia e panorâmica no mesmo endereço do seu
-                    atendimento.
-                  </p>
-                </div>
-              </article>
-              <article class="clinic-small reveal">
-                <img
-                  src="/images/clinica.jpg"
-                  alt="Recepção da Clínica LK no bairro Paraíso"
-                  loading="lazy"
-                  width="600"
-                  height="400"
-                />
-                <div>
-                  <span>03 — ACOLHIMENTO</span>
-                  <h3>Você se sente em casa.<br />Desde a primeira visita.</h3>
-                  <p>
-                    Uma estrutura preparada para receber você no Paraíso, em São
-                    Paulo.
-                  </p>
-                </div>
-              </article>
-            </div>
+            <article class="clinic-slide">
+              <img src="/images/radiologia.jpg" alt="Paciente realizando exame no centro radiológico da Clínica LK" loading="lazy" width="600" height="400" />
+              <div class="clinic-slide-copy"><span>CENTRO RADIOLÓGICO</span><h3>Mais clareza.<br />Menos deslocamentos.</h3><p>Tomografia e panorâmica no mesmo endereço do seu atendimento.</p></div>
+              <span class="gallery-slide-number" aria-hidden="true">02 / 03</span>
+            </article>
+            <article class="clinic-slide">
+              <img src="/images/clinica.jpg" alt="Recepção da Clínica LK no bairro Paraíso" loading="lazy" width="600" height="400" />
+              <div class="clinic-slide-copy"><span>ACOLHIMENTO</span><h3>O cuidado começa<br />ao chegar.</h3><p>Uma estrutura preparada para receber você no Paraíso, em São Paulo.</p></div>
+              <span class="gallery-slide-number" aria-hidden="true">03 / 03</span>
+            </article>
+          </div>
+          <div class="gallery-controls wrap">
+            <div class="gallery-dots" aria-label="Selecionar ambiente"></div>
+            <span class="gallery-count" aria-live="polite" aria-atomic="true"></span>
+            <div class="gallery-arrows"><button type="button" data-gallery-prev aria-label="Ambiente anterior" aria-controls="clinic-gallery">←</button><button type="button" data-gallery-next aria-label="Próximo ambiente" aria-controls="clinic-gallery">→</button></div>
           </div>
         </div>
       </section>

@@ -1,508 +1,109 @@
-import * as THREE from "three";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { crownGeometry } from "./dental-scene.js";
+const clamp = (n) => Math.max(0, Math.min(1, n));
+const smooth = (a, b, n) => {
+  const t = clamp((n - a) / (b - a));
+  return t * t * (3 - 2 * t);
+};
 
-const clamp = (value) => THREE.MathUtils.clamp(value, 0, 1);
-const ease = (a, b, value) => THREE.MathUtils.smoothstep(value, a, b);
-
-function anteriorGeometry(pointed = false) {
-  const shape = new THREE.Shape();
-  shape.moveTo(-0.21, 0);
-  shape.bezierCurveTo(-0.27, 0.15, -0.31, 0.55, -0.29, 0.88);
-  if (pointed) {
-    shape.quadraticCurveTo(-0.18, 0.94, 0, 1.09);
-    shape.quadraticCurveTo(0.18, 0.94, 0.29, 0.88);
-  } else {
-    shape.quadraticCurveTo(0, 0.94, 0.29, 0.88);
-  }
-  shape.bezierCurveTo(0.31, 0.55, 0.27, 0.15, 0.21, 0);
-  shape.quadraticCurveTo(0, -0.05, -0.21, 0);
-  return new THREE.ExtrudeGeometry(shape, {
-    depth: 0.23,
-    bevelEnabled: true,
-    bevelSegments: 3,
-    steps: 1,
-    bevelSize: 0.055,
-    bevelThickness: 0.055,
-    curveSegments: 10,
-  });
-}
-
-function normalizeCrown(geometry) {
-  geometry.computeBoundingBox();
-  const box = geometry.boundingBox;
-  geometry.translate(
-    -(box.min.x + box.max.x) / 2,
-    -box.min.y,
-    -(box.min.z + box.max.z) / 2,
-  );
-  geometry.computeBoundingBox();
-  return geometry;
-}
-
-function buildDentition() {
-  const root = new THREE.Group();
-  const upper = new THREE.Group();
-  const lowerPivot = new THREE.Group();
-  const lower = new THREE.Group();
-  lowerPivot.position.set(0, 0.8, -0.8);
-  lower.position.set(0, -0.8, 0.8);
-  lowerPivot.add(lower);
-  root.add(upper, lowerPivot);
-  const geometries = {
-    incisor: normalizeCrown(anteriorGeometry()),
-    canine: normalizeCrown(anteriorGeometry(true)),
-    molar: normalizeCrown(crownGeometry({ rings: 20, segments: 32 })),
-  };
-  const rootGeometry = new THREE.ConeGeometry(0.12, 0.83, 10);
-  rootGeometry.rotateZ(Math.PI);
-  const rootMaterial = new THREE.MeshStandardMaterial({
-    color: 0xd4e8ee,
-    emissive: 0x3a7c99,
-    emissiveIntensity: 0.25,
-    roughness: 0.7,
-    transparent: true,
-    opacity: 0.5,
-    depthWrite: false,
-  });
-  const wireMaterial = new THREE.MeshBasicMaterial({
-    color: 0x82c9e0,
-    transparent: true,
-    opacity: 0.15,
-    wireframe: true,
-    depthWrite: false,
-  });
-  const ghostMaterial = new THREE.MeshBasicMaterial({
-    color: 0x8bd3e5,
-    transparent: true,
-    opacity: 0.15,
-    wireframe: true,
-    depthWrite: false,
-  });
-  const gumMaterial = new THREE.MeshStandardMaterial({
-    color: 0x829bab,
-    emissive: 0x1a3749,
-    emissiveIntensity: 0.2,
-    transparent: true,
-    opacity: 0.18,
-    roughness: 0.7,
-    depthWrite: false,
-    side: THREE.DoubleSide,
-  });
-  const skeletalMaterial = new THREE.MeshStandardMaterial({
-    color: 0xa2becd,
-    transparent: true,
-    opacity: 0.18,
-    roughness: 0.85,
-    depthWrite: false,
-  });
-  const teeth = [];
-  const selected = [];
-  const halfAngles = [0.1, 0.295, 0.5, 0.73, 0.96, 1.22, 1.49];
-  const widths = [0.6, 0.55, 0.58, 0.61, 0.63, 0.68, 0.7];
-
-  for (const isUpper of [true, false]) {
-    const arch = isUpper ? upper : lower;
-    const rx = isUpper ? 3.05 : 2.9;
-    const rz = isUpper ? 2.5 : 2.35;
-    for (let i = 0; i < 14; i++) {
-      const rank = Math.floor(Math.abs(i - 6.5));
-      const angle = halfAngles[rank] * (i < 7 ? -1 : 1);
-      const group = new THREE.Group();
-      group.position.set(
-        rx * Math.sin(angle),
-        isUpper ? 0.92 : -0.96,
-        rz * Math.cos(angle),
-      );
-      group.rotation.y = angle;
-      group.scale.y = isUpper ? -1 : 1;
-      const geometry =
-        rank < 2
-          ? geometries.incisor
-          : rank === 2
-            ? geometries.canine
-            : geometries.molar;
-      const dimensions = new THREE.Vector3();
-      geometry.boundingBox.getSize(dimensions);
-      const material = new THREE.MeshPhysicalMaterial({
-        color: 0xc5dbe4,
-        emissive: 0x306180,
-        emissiveIntensity: 0.16,
-        roughness: 0.26,
-        metalness: 0,
-        clearcoat: 0.55,
-        clearcoatRoughness: 0.25,
-        transparent: true,
-        opacity: 0.24,
-      });
-      const crown = new THREE.Mesh(geometry, material);
-      crown.scale.set(
-        widths[rank] / dimensions.x,
-        0.91 / dimensions.y,
-        (rank < 3 ? 0.4 : 0.64) / dimensions.z,
-      );
-      group.add(crown);
-      const wire = new THREE.Mesh(geometry, wireMaterial);
-      wire.scale.copy(crown.scale).multiplyScalar(1.002);
-      group.add(wire);
-      const roots = rank >= 3 ? [-0.14, 0.14] : [0];
-      roots.forEach((x) => {
-        const toothRoot = new THREE.Mesh(rootGeometry, rootMaterial);
-        toothRoot.position.set(x, -0.36, 0);
-        toothRoot.rotation.z = -x * 0.65;
-        if (rank < 3) toothRoot.scale.y = 1.15;
-        group.add(toothRoot);
-      });
-      arch.add(group);
-      const tooth = {
-        group,
-        crown,
-        wire,
-        material,
-        index: i,
-        isUpper,
-        seed: (i - 6.5) / 2,
-      };
-      teeth.push(tooth);
-      if (isUpper && [5, 6, 7, 8].includes(i)) {
-        const socket = new THREE.Mesh(geometry, ghostMaterial);
-        socket.scale.copy(crown.scale).multiplyScalar(1.01);
-        group.add(socket);
-        selected.push(tooth);
-      }
-    }
-
-    const archPoints = [];
-    for (let j = 0; j <= 64; j++) {
-      const a = -1.56 + (j / 64) * 3.12;
-      archPoints.push(
-        new THREE.Vector3(
-          rx * Math.sin(a),
-          isUpper ? 1.28 : -1.3,
-          rz * Math.cos(a),
-        ),
-      );
-    }
-    const bone = new THREE.Mesh(
-      new THREE.TubeGeometry(
-        new THREE.CatmullRomCurve3(archPoints),
-        80,
-        isUpper ? 0.39 : 0.4,
-        14,
-        false,
-      ),
-      gumMaterial,
-    );
-    arch.add(bone);
-    const boneWire = new THREE.Mesh(bone.geometry, ghostMaterial);
-    arch.add(boneWire);
-  }
-
-  // The mandibular rami make the scan read as a jaw, rather than loose teeth.
-  [-1, 1].forEach((side) => {
-    const path = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(side * 2.88, -1.3, 0.25),
-      new THREE.Vector3(side * 3.12, -0.9, -0.4),
-      new THREE.Vector3(side * 3.04, 0.0, -0.92),
-      new THREE.Vector3(side * 2.9, 0.65, -1.05),
-    ]);
-    lower.add(
-      new THREE.Mesh(
-        new THREE.TubeGeometry(path, 28, 0.22, 12, false),
-        skeletalMaterial,
-      ),
-    );
-    const joint = new THREE.Mesh(
-      new THREE.SphereGeometry(0.25, 14, 10),
-      skeletalMaterial,
-    );
-    joint.scale.set(1.3, 0.7, 0.9);
-    joint.position.set(side * 2.9, 0.65, -1.05);
-    lower.add(joint);
-  });
-
-  const scan = new THREE.Group();
-  const beamMaterial = new THREE.MeshBasicMaterial({
-    color: 0x68cce8,
-    transparent: true,
-    opacity: 0.075,
-    side: THREE.DoubleSide,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-  const beam = new THREE.Mesh(new THREE.PlaneGeometry(8.2, 7.0), beamMaterial);
-  beam.rotation.x = -Math.PI / 2;
-  beam.position.z = 0.7;
-  scan.add(beam);
-  const scanLineMaterial = new THREE.LineBasicMaterial({
-    color: 0x8fe2fa,
-    transparent: true,
-    opacity: 0.6,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-  const border = new THREE.LineSegments(
-    new THREE.EdgesGeometry(beam.geometry),
-    scanLineMaterial,
-  );
-  border.rotation.copy(beam.rotation);
-  border.position.copy(beam.position);
-  scan.add(border);
-  const ring = new THREE.Mesh(
-    new THREE.TorusGeometry(4.35, 0.012, 6, 100),
-    new THREE.MeshBasicMaterial({
-      color: 0x7bc6e1,
-      transparent: true,
-      opacity: 0.3,
-      depthWrite: false,
-    }),
-  );
-  ring.rotation.x = Math.PI / 2;
-  ring.position.z = 0.6;
-  scan.add(ring);
-  root.add(scan);
-
-  // A sparse cloud evokes a reconstructed scan; these are procedural points.
-  lowerPivot.rotation.x = 0.15;
-  root.updateMatrixWorld(true);
-  const samples = [];
-  const vertex = new THREE.Vector3();
-  teeth.forEach(({ crown }) => {
-    const positions = crown.geometry.attributes.position;
-    for (let i = 0; i < positions.count; i += 9) {
-      vertex.fromBufferAttribute(positions, i).applyMatrix4(crown.matrixWorld);
-      samples.push(vertex.x, vertex.y, vertex.z);
-    }
-  });
-  const cloudMaterial = new THREE.PointsMaterial({
-    color: 0x95dbf0,
-    size: 0.028,
-    transparent: true,
-    opacity: 0.5,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-  });
-  const cloud = new THREE.Points(
-    new THREE.BufferGeometry().setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(samples, 3),
-    ),
-    cloudMaterial,
-  );
-  root.add(cloud);
-  return {
-    root,
-    teeth,
-    selected,
-    lowerPivot,
-    scan,
-    beamMaterial,
-    scanLineMaterial,
-    ring,
-    cloudMaterial,
-    rootMaterial,
-    wireMaterial,
-    ghostMaterial,
-    gumMaterial,
-    skeletalMaterial,
-  };
-}
+// Matching contours cut both the slots and moving teeth for an exact fit.
+const teeth = [
+  { path: "M526 178Q553 124 607 132Q662 139 687 205L699 274Q681 344 683 404Q679 427 643 426L566 419Q524 414 518 382Q501 274 526 178Z", x: -145, y: -125, angle: -11 },
+  { path: "M704 218Q739 110 839 110Q913 109 945 183Q970 284 967 419Q966 445 931 448L745 438Q686 432 683 408Q674 329 704 218Z", x: -60, y: -215, angle: -5 },
+  { path: "M987 184Q1022 110 1122 110Q1201 110 1227 195Q1260 301 1247 418Q1244 446 1207 448L1013 449Q974 448 975 415Q973 273 987 184Z", x: 65, y: -210, angle: 5 },
+  { path: "M1255 200Q1281 137 1353 132Q1406 132 1429 183Q1452 273 1432 387Q1426 418 1392 422L1280 429Q1248 431 1248 408Q1255 305 1231 253Z", x: 150, y: -125, angle: 11 },
+];
 
 export function createDentalArchScene(container) {
-  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-  const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true,
-    powerPreference: "low-power",
-  });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
-  renderer.setClearColor(0, 0);
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
-  container.appendChild(renderer.domElement);
-  const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  const room = new RoomEnvironment();
-  const environment = pmrem.fromScene(room, 0.04);
-  scene.environment = environment.texture;
-  room.dispose();
-  pmrem.dispose();
-  scene.add(new THREE.AmbientLight(0xc6d8e8, 1.5));
-  const key = new THREE.DirectionalLight(0xffeee1, 3.2);
-  key.position.set(-3, 6, 8);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0x8bc8ed, 2.5);
-  rim.position.set(5, 3, -4);
-  scene.add(rim);
-  const fill = new THREE.DirectionalLight(0xc1d8ee, 1.1);
-  fill.position.set(-6, -1, 2);
-  scene.add(fill);
-  const camera = new THREE.PerspectiveCamera(33, 1, 0.1, 70);
-  const model = buildDentition();
-  scene.add(model.root);
-  const state = {
-    target: 0.04,
-    progress: 0.04,
-    active: false,
-    frame: null,
-    disposed: false,
-  };
-  const ivory = new THREE.Color(0xf8f0df);
-  const xray = new THREE.Color(0xb2d3e2);
-  const gum = new THREE.Color(0x9b717b);
-  const scanBone = new THREE.Color(0x819faf);
-  const cyan = new THREE.Color(0x49b9d8);
-  const noGlow = new THREE.Color(0x000000);
+  const asset = "/images/dentition-closed-v1.png";
+  const uid = `dentition-${Math.random().toString(36).slice(2, 8)}`;
+  const image = (extra = "") => `<image href="${asset}" width="1947" height="808" ${extra}/>`;
+  container.innerHTML = `<div class="dentition-composition" aria-hidden="true">
+    <svg class="dentition-render" viewBox="-160 -300 2267 1260" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="${uid}-holo" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".10 .10 .10 0 .10 .24 .24 .24 0 .18 .30 .30 .30 0 .22 0 0 0 1 0"/></filter>
+        <mask id="${uid}-alpha" mask-type="alpha">${image()}</mask>
+        <mask id="${uid}-slots" mask-type="luminance"><rect width="1947" height="808" fill="white"/>${teeth.map(t => `<path d="${t.path}" fill="black"/>`).join("")}</mask>
+        ${teeth.map((t, i) => `<clipPath id="${uid}-tooth-${i}"><path d="${t.path}"/></clipPath>`).join("")}
+        <pattern id="${uid}-lines" width="8" height="14" patternUnits="userSpaceOnUse"><path d="M0 1H8" stroke="#7cdbf2" stroke-width="1" opacity=".4"/></pattern>
+        <linearGradient id="${uid}-ray"><stop stop-color="#7bd8f5" stop-opacity="0"/><stop offset=".48" stop-color="#7bd8f5" stop-opacity=".2"/><stop offset=".5" stop-color="#d1f7ff"/><stop offset=".52" stop-color="#7bd8f5" stop-opacity=".2"/><stop offset="1" stop-color="#7bd8f5" stop-opacity="0"/></linearGradient>
+      </defs>
+      <g class="dentition-solid" mask="url(#${uid}-slots)">${image()}</g>
+      <g class="dentition-hologram" filter="url(#${uid}-holo)">${image()}</g>
+      <g class="dentition-scan-lines" mask="url(#${uid}-alpha)"><rect width="1947" height="808" fill="url(#${uid}-lines)"/></g>
+      <g class="dentition-rays" mask="url(#${uid}-alpha)">
+        <rect class="scan-ray" x="-130" width="260" height="808" fill="url(#${uid}-ray)"/>
+        <rect class="scan-ray" x="-70" width="140" height="808" fill="url(#${uid}-ray)"/>
+        <rect class="scan-ray" x="-30" width="60" height="808" fill="url(#${uid}-ray)"/>
+      </g>
+      ${teeth.map((t,i) => `<g class="dentition-piece" style="transform-origin:${[610,835,1115,1340][i]}px 280px">
+        <g clip-path="url(#${uid}-tooth-${i})">
+          <g class="piece-solid">${image()}</g><g class="piece-holo" filter="url(#${uid}-holo)">${image()}<rect width="1947" height="808" fill="url(#${uid}-lines)"/></g>
+        </g>
+      </g>`).join("")}
+    </svg>
+  </div>`;
+  const solid = container.querySelector(".dentition-solid");
+  const hologram = container.querySelector(".dentition-hologram");
+  const lines = container.querySelector(".dentition-scan-lines");
+  const rays = container.querySelector(".dentition-rays");
+  const rayElements = [...container.querySelectorAll(".scan-ray")];
+  const pieces = [...container.querySelectorAll(".dentition-piece")];
+  const composition = container.querySelector(".dentition-composition");
+  const motion = matchMedia("(prefers-reduced-motion: reduce)");
+  let target = 0;
+  let current = 0;
+  let frame = 0;
+  let visible = true;
+  let disposed = false;
 
-  function pose(progress) {
-    const p = clamp(progress);
-    const reveal = ease(0.3, 0.72, p);
-    const scanStrength = 1 - ease(0.31, 0.43, p);
-    const extraction = ease(0.25, 0.42, p) * (1 - ease(0.43, 0.69, p));
-    const functionProgress = ease(0.72, 1, p);
-    const bite = Math.pow(Math.sin(functionProgress * Math.PI * 2), 2);
-    model.root.rotation.y = THREE.MathUtils.lerp(
-      -0.38,
-      -0.12,
-      ease(0.2, 0.86, p),
-    );
-    model.root.rotation.z = THREE.MathUtils.lerp(-0.05, 0.015, reveal);
-    model.root.scale.setScalar(THREE.MathUtils.lerp(0.94, 1.02, reveal));
-    model.lowerPivot.rotation.x =
-      THREE.MathUtils.lerp(0.15, 0, ease(0.57, 0.74, p)) + bite * 0.17;
-    model.lowerPivot.position.x =
-      Math.sin(functionProgress * Math.PI * 4) * 0.045;
-    model.scan.position.y = THREE.MathUtils.lerp(2.0, -2.2, ease(0, 0.32, p));
-    model.scan.visible = scanStrength > 0.005;
-    model.beamMaterial.opacity = 0.09 * scanStrength;
-    model.scanLineMaterial.opacity = 0.64 * scanStrength;
-    model.ring.material.opacity = 0.38 * scanStrength;
-    model.cloudMaterial.opacity = 0.45 * scanStrength;
-    model.wireMaterial.opacity = 0.12 * (1 - reveal);
-    model.ghostMaterial.opacity = 0.07 * (1 - reveal) + extraction * 0.2;
-    model.rootMaterial.opacity = 0.45 * (1 - reveal);
-    model.skeletalMaterial.opacity = 0.22 * (1 - reveal);
-    model.gumMaterial.color.copy(scanBone).lerp(gum, reveal);
-    model.gumMaterial.opacity = THREE.MathUtils.lerp(0.13, 0.83, reveal);
-    model.gumMaterial.emissiveIntensity = 0.18 * (1 - reveal);
-    model.teeth.forEach((tooth) => {
-      tooth.material.color.copy(xray).lerp(ivory, reveal);
-      tooth.material.opacity = THREE.MathUtils.lerp(0.2, 1, reveal);
-      tooth.material.emissiveIntensity = 0.18 * (1 - reveal);
+  function paint(p) {
+    const materialize = smooth(.27, .40, p);
+    const extract = smooth(.24, .38, p);
+    solid.style.opacity = materialize;
+    hologram.style.opacity = .66 * (1 - smooth(.25, .37, p));
+    lines.style.opacity = .65 * (1 - smooth(.27, .39, p));
+    rays.style.opacity = 1 - smooth(.29, .40, p);
+    rayElements.forEach((ray, i) => ray.setAttribute("transform", `translate(${(-120 + p * 8400 - i * 155).toFixed(2)} 0)`));
+    pieces.forEach((piece, i) => {
+      const seat = smooth(.40 + i * .027, .59 + i * .027, p);
+      const offset = extract * (1 - seat);
+      const t = teeth[i];
+      piece.style.opacity = smooth(.23, .29, p);
+      piece.style.transform = `translate(${(t.x * offset).toFixed(2)}px,${(t.y * offset).toFixed(2)}px) rotate(${(t.angle * offset).toFixed(2)}deg)`;
+      const finish = smooth(.77, 1, seat);
+      piece.querySelector(".piece-solid").style.opacity = finish;
+      piece.querySelector(".piece-holo").style.opacity = .9 * (1 - finish);
     });
-    model.selected.forEach((tooth) => {
-      const offset = extraction * (1 - Math.abs(tooth.seed) * 0.12);
-      tooth.crown.position.set(
-        Math.sign(tooth.seed) * 0.23 * offset,
-        -1.45 * offset,
-        1.65 * offset,
-      );
-      tooth.crown.rotation.set(
-        offset * 0.2,
-        tooth.seed * offset * 0.13,
-        tooth.seed * offset * 0.1,
-      );
-      tooth.material.opacity = Math.max(
-        tooth.material.opacity,
-        0.8 * extraction,
-      );
-      tooth.material.emissive.copy(noGlow).lerp(cyan, extraction * 0.55);
-      tooth.material.emissiveIntensity = extraction * 0.48;
-      tooth.wire.visible = extraction < 0.03;
-    });
-    container.style.setProperty("--scan-opacity", scanStrength.toFixed(3));
+    composition.style.transform = `scale(${(1 + smooth(.70, .90, p) * .065).toFixed(4)})`;
+    container.dataset.phase = p < .29 ? "scan" : p < .70 ? "fit" : "complete";
   }
-
-  function frame() {
-    state.frame = null;
-    if (state.disposed) return;
-    state.progress = reduced.matches
-      ? state.target
-      : THREE.MathUtils.lerp(state.progress, state.target, 0.12);
-    pose(state.progress);
-    renderer.render(scene, camera);
-    if (
-      state.active &&
-      !document.hidden &&
-      Math.abs(state.progress - state.target) > 0.00015
-    )
-      state.frame = requestAnimationFrame(frame);
+  function tick() {
+    frame = 0;
+    if (disposed || !visible || document.hidden) return;
+    current += (target - current) * .16;
+    if (Math.abs(target - current) < .00015) current = target;
+    paint(current);
+    if (current !== target) frame = requestAnimationFrame(tick);
   }
-  function requestFrame() {
-    if (
-      state.active &&
-      !state.disposed &&
-      !document.hidden &&
-      state.frame === null
-    )
-      state.frame = requestAnimationFrame(frame);
+  function schedule() {
+    if (!frame && !disposed) frame = requestAnimationFrame(tick);
   }
-  function resize() {
-    const bounds = container.getBoundingClientRect();
-    if (!bounds.width || !bounds.height) return;
-    renderer.setSize(bounds.width, bounds.height, false);
-    camera.aspect = bounds.width / bounds.height;
-    camera.position.set(7.3, 4.7, 11.5);
-    if (innerWidth <= 600) camera.position.multiplyScalar(0.88);
-    if (camera.aspect < 0.8) camera.position.multiplyScalar(1.12);
-    camera.lookAt(0, 0.15, 0.65);
-    camera.updateProjectionMatrix();
-    pose(state.progress);
-    renderer.render(scene, camera);
+  function setTimelineProgress(p) {
+    target = motion.matches ? 1 : clamp(p);
+    schedule();
   }
-  const visibility = new IntersectionObserver(
-    ([entry]) => {
-      state.active = entry.isIntersecting;
-      if (!state.active && state.frame !== null) {
-        cancelAnimationFrame(state.frame);
-        state.frame = null;
-      }
-      requestFrame();
-    },
-    { rootMargin: "100px" },
-  );
-  visibility.observe(container);
-  const dimensions = new ResizeObserver(resize);
-  dimensions.observe(container);
-  document.addEventListener("visibilitychange", requestFrame);
-  reduced.addEventListener("change", requestFrame);
-  resize();
-  function setProgress(value) {
-    state.target = clamp(value);
-    requestFrame();
-  }
+  const observer = new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    if (visible) { current = target; paint(current); schedule(); }
+  }, {rootMargin:"150px"});
+  observer.observe(container);
+  const onVisibility = () => { if (!document.hidden) schedule(); };
+  document.addEventListener("visibilitychange", onVisibility);
+  paint(motion.matches ? 1 : 0);
   return {
-    setTimelineProgress: setProgress,
-    setStoryProgress(step, within) {
-      setProgress([0.12, 0.51, 0.88][step] + within * 0.06);
-    },
-    resetTimeline() {
-      setProgress(0.12);
-    },
-    renderOnce() {
-      state.progress = state.target;
-      pose(state.progress);
-      renderer.render(scene, camera);
-    },
-    dispose() {
-      state.disposed = true;
-      if (state.frame !== null) cancelAnimationFrame(state.frame);
-      visibility.disconnect();
-      dimensions.disconnect();
-      document.removeEventListener("visibilitychange", requestFrame);
-      reduced.removeEventListener("change", requestFrame);
-      const geometries = new Set();
-      const materials = new Set();
-      scene.traverse((object) => {
-        if (object.geometry) geometries.add(object.geometry);
-        if (object.material) materials.add(object.material);
-      });
-      geometries.forEach((geometry) => geometry.dispose());
-      materials.forEach((material) => material.dispose());
-      environment.dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
-    },
+    setTimelineProgress,
+    setStoryProgress(step, within) { setTimelineProgress((step + within) / 3); },
+    resetTimeline() { target = current = motion.matches ? 1 : 0; paint(current); },
+    renderOnce() { current = motion.matches ? 1 : target; paint(current); },
+    dispose() { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); document.removeEventListener("visibilitychange", onVisibility); container.replaceChildren(); },
   };
 }

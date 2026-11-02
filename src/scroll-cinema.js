@@ -24,10 +24,13 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
   const modelLabel = document.querySelector("#model-label");
   const floating = document.querySelector(".floating-contact");
   const contact = document.querySelector("#contato");
+  const navigation = [...document.querySelectorAll('.desktop-nav a, .mobile-nav a')]
+    .map(link => ({link, section: document.querySelector(link.getAttribute('href'))}));
+  const navigationSections = [...new Set(navigation.map(item => item.section))];
   const labels = [
     "Enxergar cada detalhe. Planejar cada etapa.",
     "Do planejamento ao encaixe de cada dente.",
-    "Harmonia no movimento. Confiança para viver.",
+    "Um sorriso em harmonia. Confiança para viver.",
   ];
   let enabled = false;
   let headerHeight = 84;
@@ -98,6 +101,8 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
     if (disposed) return;
     const heroRect = hero.getBoundingClientRect();
     const storyRect = story.getBoundingClientRect();
+    const currentSection = navigationSections.filter(section => section.getBoundingClientRect().top <= innerHeight * .35).at(-1);
+    navigation.forEach(({link,section}) => section === currentSection ? link.setAttribute('aria-current','location') : link.removeAttribute('aria-current'));
     const insideStory =
       enabled &&
       storyRect.top < innerHeight * 0.5 &&

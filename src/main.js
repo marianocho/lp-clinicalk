@@ -1,7 +1,11 @@
 import "./style.css";
 import "./cinema.css";
 import "./theme.css";
+import "./refinements.css";
 import { createScrollCinema } from "./scroll-cinema.js";
+import { createGalleries } from "./galleries.js";
+
+const galleries = createGalleries();
 
 const icons = {
   whatsapp:
@@ -152,17 +156,7 @@ async function loadScenes() {
     const fallback = document.createElement("div");
     fallback.className = "model-fallback arch-fallback";
     fallback.setAttribute("aria-hidden", "true");
-    const upper = Array.from(
-      { length: 10 },
-      (_, i) =>
-        `<rect x="${51 + i * 26}" y="${88 + Math.abs(i - 4.5) * 2}" width="23" height="51" rx="7"/>`,
-    ).join("");
-    const lower = Array.from(
-      { length: 10 },
-      (_, i) =>
-        `<rect x="${56 + i * 25}" y="${152 - Math.abs(i - 4.5)}" width="22" height="43" rx="7"/>`,
-    ).join("");
-    fallback.innerHTML = `<svg viewBox="0 0 360 260"><g fill="#936e78"><path d="M42 78Q180 30 318 78L310 108Q180 72 50 108Z"/><path d="M48 181Q180 212 312 181L314 208Q180 251 46 208Z"/></g><g fill="#eee8d9" stroke="#c4d0d6" stroke-width="1">${upper}${lower}</g><path d="M25 143H335" stroke="#7cc8e0" stroke-width="1" opacity=".4"/></svg>`;
+    fallback.innerHTML = '<img src="/images/dentition-closed-v1.png" alt="" />';
     document.querySelector(".story-visual-inner").append(fallback);
     document.querySelector(".story-visual-inner").classList.add("no-webgl");
   }
@@ -187,6 +181,7 @@ document.querySelector("#year").textContent = String(new Date().getFullYear());
 
 if (import.meta.hot)
   import.meta.hot.dispose(() => {
+    galleries.dispose();
     cinema.dispose();
     heroScene?.dispose();
     storyScene?.dispose();
