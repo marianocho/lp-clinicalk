@@ -51,8 +51,6 @@ export function createDentalArchScene(container) {
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   let target = 0;
   let current = 0;
-  let frame = 0;
-  let visible = true;
   let disposed = false;
 
   function paint(p) {
@@ -62,7 +60,7 @@ export function createDentalArchScene(container) {
     hologram.style.opacity = .66 * (1 - smooth(.25, .37, p));
     lines.style.opacity = .65 * (1 - smooth(.27, .39, p));
     rays.style.opacity = 1 - smooth(.29, .40, p);
-    rayElements.forEach((ray, i) => ray.setAttribute("transform", `translate(${(-120 + p * 8400 - i * 155).toFixed(2)} 0)`));
+    rayElements.forEach((ray, i) => ray.setAttribute("transform", `translate(${(-100 + Math.min(1, p / .29) * 2150 - i * 155).toFixed(2)} 0)`));
     pieces.forEach((piece, i) => {
       const seat = smooth(.40 + i * .027, .59 + i * .027, p);
       const offset = extract * (1 - seat);
@@ -75,35 +73,21 @@ export function createDentalArchScene(container) {
     });
     composition.style.transform = `scale(${(1 + smooth(.70, .90, p) * .065).toFixed(4)})`;
     container.dataset.phase = p < .29 ? "scan" : p < .70 ? "fit" : "complete";
-  }
-  function tick() {
-    frame = 0;
-    if (disposed || !visible || document.hidden) return;
-    current += (target - current) * .16;
-    if (Math.abs(target - current) < .00015) current = target;
-    paint(current);
-    if (current !== target) frame = requestAnimationFrame(tick);
-  }
-  function schedule() {
-    if (!frame && !disposed) frame = requestAnimationFrame(tick);
+    container.dataset.progress = p.toFixed(4);
   }
   function setTimelineProgress(p) {
+    if (disposed) return;
     target = motion.matches ? 1 : clamp(p);
-    schedule();
+    if (current === target) return;
+    current = target;
+    paint(current);
   }
-  const observer = new IntersectionObserver(([entry]) => {
-    visible = entry.isIntersecting;
-    if (visible) { current = target; paint(current); schedule(); }
-  }, {rootMargin:"150px"});
-  observer.observe(container);
-  const onVisibility = () => { if (!document.hidden) schedule(); };
-  document.addEventListener("visibilitychange", onVisibility);
   paint(motion.matches ? 1 : 0);
   return {
     setTimelineProgress,
     setStoryProgress(step, within) { setTimelineProgress((step + within) / 3); },
     resetTimeline() { target = current = motion.matches ? 1 : 0; paint(current); },
     renderOnce() { current = motion.matches ? 1 : target; paint(current); },
-    dispose() { disposed = true; cancelAnimationFrame(frame); observer.disconnect(); document.removeEventListener("visibilitychange", onVisibility); container.replaceChildren(); },
+    dispose() { disposed = true; container.replaceChildren(); },
   };
 }

@@ -26,6 +26,8 @@ export function createSmileBridge({journey, pin, story, stories}) {
   let enabled = false;
   let visible = true;
   let mode;
+  let lastPaint = null;
+  let cachedGeometry;
   const originalInert = false;
 
   function geometry() {
@@ -67,7 +69,7 @@ export function createSmileBridge({journey, pin, story, stories}) {
   }
 
   function paint(t) {
-    const {source, destination, endPhoto, naturalW, naturalH} = geometry();
+    const {source, destination, endPhoto, naturalW, naturalH} = cachedGeometry ||= geometry();
     const travel = smooth(0, .90, t);
     const zoom = smooth(0, .88, t);
     const cx = mix(source.x + source.w / 2, destination.x + destination.w / 2, travel);
@@ -123,11 +125,13 @@ export function createSmileBridge({journey, pin, story, stories}) {
     stories.setAttribute('aria-hidden', String(t < .62));
     story.style.pointerEvents = t > .23 ? 'none' : 'auto';
     stories.style.pointerEvents = t < .98 ? 'none' : 'auto';
+    lastPaint = t;
   }
 
   function tick() {
     animation = 0;
     if (disposed || !enabled || !visible || document.hidden) return;
+    if (current === target && current === lastPaint) return;
     current += (target - current) * .18;
     if (Math.abs(target - current) < .0001) current = target;
     paint(current);
@@ -145,6 +149,8 @@ export function createSmileBridge({journey, pin, story, stories}) {
     journey.removeAttribute('data-scene');
     journey.removeAttribute('data-smile-progress');
     mode = undefined;
+    lastPaint = null;
+    cachedGeometry = undefined;
   }
   const observer = new IntersectionObserver(([entry]) => {
     visible = entry.isIntersecting;
@@ -153,6 +159,9 @@ export function createSmileBridge({journey, pin, story, stories}) {
   observer.observe(journey);
   const onVisibility = () => { if (!document.hidden) schedule(); };
   document.addEventListener('visibilitychange',onVisibility);
+  const invalidateGeometry = () => { cachedGeometry = undefined; lastPaint = null; schedule(); };
+  track.addEventListener('scroll',invalidateGeometry,{passive:true});
+  photo.addEventListener('load',invalidateGeometry);
   return {
     update(progress, nextEnabled) {
       const changed = enabled !== nextEnabled;
@@ -168,7 +177,7 @@ export function createSmileBridge({journey, pin, story, stories}) {
       if (changed) { current = target; paint(current); }
       schedule();
     },
-    refresh() { if (enabled) paint(current); },
-    dispose() { disposed = true; cancelAnimationFrame(animation); observer.disconnect(); document.removeEventListener('visibilitychange',onVisibility); reset(); },
+    refresh: invalidateGeometry,
+    dispose() { disposed = true; cancelAnimationFrame(animation); observer.disconnect(); document.removeEventListener('visibilitychange',onVisibility); track.removeEventListener('scroll',invalidateGeometry); photo.removeEventListener('load',invalidateGeometry); reset(); },
   };
 }

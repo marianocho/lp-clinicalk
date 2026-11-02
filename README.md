@@ -25,13 +25,13 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 
 - Benefício, especialidade e contato aparecem no início; localização detalhada ao final.
 - Experiência, Laboratório Kim e centro radiológico apresentam os diferenciais.
-- A abertura tem três cenas fixas: a rolagem gira, aproxima, separa e reúne o implante, enquanto o conteúdo muda dentro da mesma composição.
-- O tratamento fica fixo em três capítulos: raios escaneiam dentes em holograma; quatro dentes holográficos se encaixam em uma dentição sólida; o sorriso fechado aparece com acabamento suave. Não há mastigação, mandíbula ou oval fixo. A rolagem controla toda a sequência, inclusive o retorno.
+- A abertura começa com o depoimento original de Maria Rosa, com controles de som, pausa e reprodução completa. Ao avançar para “Precisão que transforma”, o vídeo sai e o implante entra suavemente. As três cenas permanecem na mesma composição.
+- O tratamento fica fixo em três capítulos: raios escaneiam dentes em holograma; quatro dentes holográficos se encaixam em uma dentição sólida; o sorriso fechado aparece com acabamento suave. Não há mastigação, mandíbula ou oval fixo. A rolagem controla toda a sequência, inclusive o retorno. O scan e os textos usam a mesma atualização de rolagem; os capítulos mantêm o texto legível durante a varredura, sem os antigos intervalos apagados.
 - Jost é a família universal, incluindo títulos, textos, navegação e botões.
 - A abertura usa creme e bege. A sequência do tratamento e o contato usam azul noturno, com contrastes em marfim e champanhe.
 - Os indicadores de cena permitem ir diretamente a um capítulo. “Pular a animação” leva às histórias dos pacientes. O cabeçalho mantém acesso ao agendamento.
 - No fim do tratamento, os dentes se fundem ao sorriso real da Cida. O zoom se afasta até o primeiro card, enquanto Pedro e Bárbara aparecem ao lado. A foto original permanece intacta.
-- As três histórias aparecem juntas no computador; no celular, em carrossel. A estrutura da clínica mantém sua galeria horizontal, com indicadores, setas, toque e teclado. Vídeos de Cida, Pedro e Bárbara em modal; vídeo explicativo da Dra. Fabiana na seção da equipe.
+- Os cinco depoimentos de Cida, Pedro, Bárbara, Maria Rosa e Isaías estão no carrossel, com três cards visíveis por vez no computador e um no celular. Setas, indicadores, toque e teclado dão acesso a todos os vídeos. A Dra. Fabiana tem uma seção própria com reprodução na página, antes da narrativa do tratamento; a equipe também oferece um link para essa seção. A estrutura da clínica mantém sua galeria horizontal.
 - Estrutura, equipe, primeira consulta, perguntas frequentes e localização completam o percurso.
 - WhatsApp acessível no cabeçalho, nas seções de decisão e em botão flutuante.
 
@@ -42,7 +42,8 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 - `src/main.js`: navegação, modais, observação da rolagem e contato.
 - `src/dental-scene.js`: modelo procedural e renderização com Three.js.
 - `src/dental-arch-scene.js`: composição SVG em camadas, holograma, raios, encaixe e dentição fechada.
-- `src/galleries.js`: carrosséis com rolagem nativa, controles e estado acessível.
+- `src/galleries.js`: carrosséis com rolagem nativa, paginação por posições reais, controles e estado acessível.
+- `src/video-players.js` e `src/video-experience.css`: vídeo da abertura, pausa por visibilidade, controles e seção da Dra. Fabiana.
 - `src/refinements.css`: refinamentos de capítulos, navegação, galerias e dentição.
 - `src/smile-bridge.js` e `src/smile-journey.css`: transição dos dentes à fotografia, câmera, área fixa compartilhada, cards e tipografia universal.
 - `src/theme.css`: cores creme e azul noturno.
@@ -56,7 +57,7 @@ Os botões usam o WhatsApp `+55 11 99263-5157`, confirmado no código do fluxo p
 
 Não há formulário, backend, integração com o webhook do site original, cookies de rastreamento ou gravação de dados pessoais. O evento local `lk:contact` informa a posição do botão e fica disponível para uma futura integração de métricas. Nenhum evento é enviado a serviços externos.
 
-Os vídeos são carregados de `clinicalk.com.br` somente quando solicitados. As fotos, logos e fontes estão locais. O implante 3D tem alternativa vetorial para falha de WebGL. A dentição do tratamento usa uma imagem ilustrativa gerada com Imagegen (`public/images/dentition-closed-v1.png`), com transparência e máscaras SVG. As animações pausam fora da área visível ou com a aba oculta. O conteúdo e os links principais são HTML e continuam acessíveis sem a cena 3D.
+Os vídeos usam os arquivos originais de `clinicalk.com.br`. O vídeo da abertura reproduz sem som e pausa ao sair da cena; o som depende de ação do visitante. Os depoimentos completos carregam ao abrir o modal, e a explicação da Dra. Fabiana começa por clique. As fotos, pôsteres, logos e fontes estão locais. O pôster de Isaías foi extraído do próprio vídeo original, sem alteração do paciente. O implante 3D tem alternativa vetorial para falha de WebGL. A dentição do tratamento usa uma imagem ilustrativa gerada com Imagegen (`public/images/dentition-closed-v1.png`), com transparência e máscaras SVG. O implante 3D pausa fora da área visível ou com a aba oculta; a dentição SVG é atualizada apenas quando o progresso muda. Os vídeos pausam quando saem de cena ou a aba fica oculta. Os avisos de “role para avançar” foram removidos. O conteúdo e os links principais são HTML e continuam acessíveis sem a cena 3D.
 
 As cenas usam rolagem nativa e `position: sticky`, sem interceptar gestos, travar a roda do mouse ou instalar bibliotecas de suavização. Com movimento reduzido, JavaScript desabilitado ou tela com menos de 600px de altura, o conteúdo volta à leitura sequencial. Os painéis que estão fora de cena ficam fora da ordem de foco.
 

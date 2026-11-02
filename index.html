@@ -134,10 +134,6 @@
                 trabalha em conjunto para devolver mais confiança ao seu dia a
                 dia.
               </p>
-              <span class="film-note"
-                ><span data-icon="tooth"></span> Role para ver as peças se
-                transformarem.</span
-              >
             </div>
             <div
               class="hero-film-panel"
@@ -160,6 +156,7 @@
               >
             </div>
             <div class="hero-art">
+              <div class="hero-dental-layer" aria-hidden="true" inert>
               <div class="art-eyebrow">
                 <span>PRECISÃO EM CADA DETALHE</span
                 ><span class="tiny-plus" aria-hidden="true">+</span>
@@ -210,22 +207,21 @@
                   ></span
                 >
               </div>
-              <div class="art-bottom">
-                <span>CIÊNCIA, CUIDADO E CONFIANÇA.</span
-                ><a
-                  href="#tratamento"
-                  aria-label="Role para conhecer o tratamento"
-                  ><span class="scroll-mouse" aria-hidden="true"></span> ROLE
-                  PARA DESCOBRIR</a
-                >
+
+              </div>
+              <div class="hero-testimonial">
+                <figure class="hero-video-frame">
+                  <video id="hero-experience" src="https://clinicalk.com.br/videos/depoimento-hero.mp4" poster="/videos/depoimento-hero.jpg" autoplay muted loop playsinline preload="metadata" controls aria-label="Maria Rosa conta sua experiência com a Clínica LK"></video>
+                  <div class="hero-video-controls">
+                    <button type="button" id="hero-video-sound" aria-label="Ativar som do depoimento" aria-pressed="false">Ativar som</button>
+                    <button type="button" id="hero-video-pause" aria-label="Pausar depoimento" aria-pressed="false">Pausar</button>
+                  </div>
+                  <figcaption><span><strong>Maria Rosa</strong><span>Paciente da Clínica LK</span></span><button type="button" data-video="hero" aria-label="Assistir ao depoimento completo de Maria Rosa"><span aria-hidden="true">▶</span> Assistir</button></figcaption>
+                </figure>
               </div>
             </div>
           </div>
           <div class="hero-timeline wrap">
-            <span
-              ><span class="scroll-mouse" aria-hidden="true"></span> ROLE PARA
-              AVANÇAR A CENA</span
-            >
             <nav aria-label="Cenas da abertura">
               <button
                 type="button"
@@ -308,6 +304,22 @@
               ><span data-icon="check"></span> Um cuidado pensado para o seu
               caso</span
             >
+          </div>
+        </div>
+      </section>
+
+      <section class="doctor-explainer section-space" id="explicacao" aria-labelledby="doctor-video-title">
+        <div class="doctor-video-grid wrap">
+          <div class="doctor-video-copy reveal">
+            <p class="eyebrow">COM A DRA. FABIANA</p>
+            <h2 id="doctor-video-title">Entenda o tratamento.<br /><em>Com quem cuida de você.</em></h2>
+            <p>A Dra. Fabiana explica o que é a prótese protocolo, para quem ela pode ser indicada e como o planejamento acontece junto ao Laboratório Kim.</p>
+            <p>Assista com calma. Entender as possibilidades faz parte do seu cuidado.</p>
+            <a class="button button-lime" data-contact data-placement="doctor-video" href="https://wa.me/5511992635157?text=Ol%C3%A1!%20Quero%20conversar%20sobre%20o%20tratamento%20com%20pr%C3%B3tese%20protocolo." target="_blank" rel="noopener noreferrer">Conversar com a equipe <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="doctor-video-frame reveal" data-inline-player>
+            <video id="doctor-explanation" src="https://clinicalk.com.br/videos/fabi-servico.mp4" poster="/videos/fabiana.jpg" playsinline preload="none" controls aria-label="A Dra. Fabiana explica o tratamento com prótese protocolo"></video>
+            <button type="button" class="inline-video-play" data-inline-play aria-label="Assistir à explicação da Dra. Fabiana"><span aria-hidden="true">▶</span><span>Assistir à explicação</span></button>
           </div>
         </div>
       </section>
@@ -427,9 +439,6 @@
             >
               <span>03</span> Voltar a sorrir<i aria-hidden="true"></i>
             </button>
-            <span class="story-scroll-hint"
-              >ROLE PARA AVANÇAR <span aria-hidden="true">↓</span></span
-            >
           </nav>
         </div>
       </section>
@@ -507,6 +516,14 @@
                 ><strong>Bárbara</strong><span>Prótese protocolo</span></span
               ><span class="play-circle" aria-hidden="true">▶</span></span
             >
+          </button>
+          <button class="patient-card" data-video="mariarosa" aria-label="Assistir ao depoimento de Maria Rosa">
+            <img src="/videos/depo-mariarosa.jpg" alt="Maria Rosa contando sua experiência com a Clínica LK" loading="lazy" width="720" height="1280" />
+            <span class="patient-top">UMA EXPERIÊNCIA PARA COMPARTILHAR.</span><span class="patient-bottom"><span><strong>Maria Rosa</strong><span>Prótese protocolo</span></span><span class="play-circle" aria-hidden="true">▶</span></span>
+          </button>
+          <button class="patient-card" data-video="isaias" aria-label="Assistir ao depoimento de Isaías">
+            <img src="/videos/isaias-poster-v1.jpg" alt="Isaías contando sua experiência com a Clínica LK" loading="lazy" width="720" height="1280" />
+            <span class="patient-top">UMA HISTÓRIA CONTADA POR QUEM VIVEU.</span><span class="patient-bottom"><span><strong>Isaías</strong><span>Prótese protocolo</span></span><span class="play-circle" aria-hidden="true">▶</span></span>
           </button>
         </div>
         <div class="gallery-controls wrap">
@@ -606,10 +623,7 @@
             <strong>Dr. Chang Kook Kim</strong
             ><span>Responsável técnico · CROSP 46581</span>
           </div>
-          <button class="text-link video-text-link" data-video="fabiana">
-            <span class="small-play" aria-hidden="true">▶</span> A Dra. Fabiana
-            explica o tratamento <span aria-hidden="true">↗</span>
-          </button>
+          <a class="text-link video-text-link" href="#explicacao">A Dra. Fabiana explica o tratamento <span aria-hidden="true">↗</span></a>
         </div>
       </section>
 

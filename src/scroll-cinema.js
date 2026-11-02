@@ -8,7 +8,7 @@ const smooth = (start, end, value) => {
 
 // The document supplies the timeline. No wheel/touch interception or scroll lock.
 // A sticky viewport holds the composition while its scroll distance plays it.
-export function createScrollCinema({ getHeroScene, getStoryScene }) {
+export function createScrollCinema({ getHeroScene, getStoryScene, onHeroVideoVisibility = () => {} }) {
   const root = document.documentElement;
   const motion = matchMedia("(prefers-reduced-motion: reduce)");
   const header = document.querySelector(".header-inner");
@@ -17,6 +17,8 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
   const journey = document.querySelector('.smile-journey');
   const stories = document.querySelector('#historias');
   const heroPin = document.querySelector(".hero-pin");
+  const heroVideo = document.querySelector('.hero-testimonial');
+  const heroDental = document.querySelector('.hero-dental-layer');
   const storyPin = document.querySelector('.journey-pin');
   const smileBridge = createSmileBridge({journey, pin:storyPin, story, stories});
   const heroPanels = [
@@ -61,19 +63,19 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
   }
 
   function paintPanels(panels, buttons, progress, isHero) {
-    const enterMiddle = smooth(0.29, 0.36, progress);
-    const leaveMiddle = smooth(0.63, 0.7, progress);
+    const enterMiddle = smooth(0.28, 0.32, progress);
+    const leaveMiddle = smooth(0.68, 0.72, progress);
     const alphas = [
-      1 - smooth(0.22, 0.29, progress),
+      1 - enterMiddle,
       enterMiddle * (1 - leaveMiddle),
-      smooth(0.7, 0.77, progress),
+      leaveMiddle,
     ];
     const shifts = [
-      -60 * smooth(0.22, 0.29, progress),
-      60 * (1 - enterMiddle) - 60 * leaveMiddle,
-      60 * (1 - smooth(0.7, 0.77, progress)),
+      -20 * enterMiddle,
+      20 * (1 - enterMiddle) - 20 * leaveMiddle,
+      20 * (1 - leaveMiddle),
     ];
-    const current = progress < 0.29 ? 0 : progress < 0.7 ? 1 : 2;
+    const current = progress < 0.30 ? 0 : progress < 0.7 ? 1 : 2;
     panels.forEach((panel, i) => {
       panel.style.opacity = alphas[i].toFixed(4);
       panel.style.transform = `translate3d(0,${shifts[i].toFixed(2)}px,0) scale(${(0.985 + alphas[i] * 0.015).toFixed(4)})`;
@@ -132,12 +134,30 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
       hero.style.setProperty("--hero-progress", heroProgress.toFixed(4));
       story.style.setProperty("--story-progress", storyProgress.toFixed(4));
       paintPanels(heroPanels, heroButtons, heroProgress, true);
+      const dentalReveal = smooth(.23,.32,heroProgress);
+      heroVideo.style.opacity = 1 - dentalReveal;
+      heroVideo.style.transform = `translate3d(0,${-25 * dentalReveal}px,0) scale(${1 - dentalReveal * .035})`;
+      heroDental.style.opacity = dentalReveal;
+      heroDental.style.transform = `translate3d(0,${40 * (1 - dentalReveal)}px,0)`;
+      heroVideo.inert = dentalReveal > .8;
+      heroVideo.setAttribute('aria-hidden',String(dentalReveal > .8));
+      heroDental.inert = dentalReveal < .2;
+      heroDental.setAttribute('aria-hidden',String(dentalReveal < .2));
+      onHeroVideoVisibility(heroRect.top < innerHeight && heroRect.bottom > headerHeight && dentalReveal < .8);
       paintPanels(storyPanels, storyButtons, storyProgress, false);
       getHeroScene()?.setIntroProgress(heroProgress);
       getStoryScene()?.setTimelineProgress(storyProgress);
       smileBridge.update(journeyProgress,true);
     } else {
       smileBridge.update(0,false);
+      heroVideo.style.opacity = 1;
+      heroVideo.style.transform = 'none';
+      heroVideo.inert = false;
+      heroVideo.removeAttribute('aria-hidden');
+      heroDental.style.opacity = 0;
+      heroDental.inert = true;
+      heroDental.setAttribute('aria-hidden','true');
+      onHeroVideoVisibility(heroRect.top < innerHeight && heroRect.bottom > headerHeight);
       // The complete original reading flow remains available without pinned scenes.
       let current = 0;
       storyPanels.forEach((panel, i) => {
@@ -167,6 +187,7 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
       !motion.matches &&
       innerHeight >= 600 &&
       CSS.supports("position", "sticky");
+    smileBridge.refresh();
     if (enabled !== nextEnabled) {
       enabled = nextEnabled;
       root.classList.toggle("cinematic", enabled);

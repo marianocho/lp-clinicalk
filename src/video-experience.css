@@ -1,0 +1,86 @@
+/* The first scene leads with a real patient's experience. */
+.hero-dental-layer { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+.hero-dental-layer .dental-canvas { inset: 35px -35px 28px -30px; cursor: grab; }
+.hero-testimonial { position: absolute; inset: 35px 0 55px; display: flex; align-items: center; justify-content: center; transform-origin: center; z-index: 5; }
+.hero-video-frame { position: relative; height: min(74svh,640px); max-height: 100%; max-width: 82%; aspect-ratio: 9/16; border-radius: 28px; overflow: hidden; background: #172130; box-shadow: 0 25px 70px #23372e18; }
+.hero-video-frame video { width: 100%; height: 100%; object-fit: cover; }
+.hero-video-controls { position: absolute; top: 14px; right: 14px; left: 14px; display: flex; justify-content: flex-end; gap: 7px; }
+.hero-video-controls button { min-height: 40px; padding: 9px 12px; border-radius: 999px; color: #fff9ef; background: #112030bd; backdrop-filter: blur(12px); font-size: 11px; line-height: 1; }
+.hero-video-frame figcaption { position: absolute; bottom: 0; left: 0; right: 0; padding: 45px 23px 23px; color: #fff9ef; background: linear-gradient(transparent,#101a29b8); display: flex; justify-content: space-between; align-items: flex-end; gap: 15px; }
+.hero-video-frame figcaption > span { display: flex; flex-direction: column; font-size: 10px; line-height: 1.6; }
+.hero-video-frame figcaption strong { font-size: 24px; font-weight: 500; letter-spacing: -.5px; }
+.hero-video-frame figcaption button { min-height: 36px; padding: 9px 12px; display: flex; align-items: center; gap: 8px; background: #f3eadbed; border-radius: 999px; color: #173023; font-size: 10px; }
+.cinematic .hero-dental-layer { pointer-events: auto; }
+.hero-timeline > span, .story-scroll-hint { display: none !important; }
+.cinematic .hero .annotation { opacity: 1; }
+
+/* An explanation that can be watched directly in its own section. */
+.doctor-explainer { background: #111d2d; color: #eee7db; }
+.doctor-video-grid { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 90px; }
+.doctor-video-copy .eyebrow { color: #d7c5a8; margin-bottom: 30px; }
+.doctor-video-copy h2 { font-size: clamp(38px,4.1vw,58px); letter-spacing: -2px; max-width: 580px; }
+.doctor-video-copy h2 em { color: #b7cddd; }
+.doctor-video-copy > p:not(.eyebrow) { color: #acbac8; margin-top: 25px; max-width: 440px; line-height: 1.8; font-size: 15px; }
+.doctor-video-copy .button { margin-top: 32px; }
+.doctor-video-frame { position: relative; width: min(100%,365px); justify-self: center; aspect-ratio: 9/16; overflow: hidden; border-radius: 28px; background: #0a1421; }
+.doctor-video-frame video { width: 100%; height: 100%; object-fit: cover; }
+.inline-video-play { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; background: linear-gradient(transparent,#0e1c2a60); color: #fff8ee; font-size: 12px; }
+.inline-video-play > span:first-child { width: 72px; height: 72px; display: grid; place-items: center; padding-left: 4px; border: 1px solid #fff8eebb; border-radius: 50%; background: #16283b70; font-size: 22px; backdrop-filter: blur(10px); }
+.has-started .inline-video-play { display: none; }
+
+/* Shorter chapter travel; the timeline now paints the scan in the same frame. */
+.cinematic .smile-journey { height: 430svh; }
+.cinematic .patient-gallery { --slide-width: calc((min(1280px,calc(100vw - 112px)) - 48px)/3); --patient-gutter: max(56px,calc((100vw - 1280px)/2)); }
+.cinematic .patient-grid.gallery-track { display: flex; width: 100%; gap: 24px; padding: 0 var(--patient-gutter); margin: 0; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: var(--patient-gutter); }
+.cinematic .patient-gallery .patient-card { width: auto; flex: 0 0 var(--slide-width); scroll-snap-align: start; }
+.cinematic .patient-gallery .gallery-controls { display: flex; flex: 0 0 auto; margin-top: 16px; }
+.patient-card[data-video="mariarosa"] img, .patient-card[data-video="isaias"] img { object-position: 50% 45%; }
+
+@media (max-width: 850px) {
+  .hero-testimonial { inset: 35px 0 55px; }
+  .hero-video-controls { top: 9px; right: 9px; left: 9px; }
+  .hero-video-controls button { font-size: 9px; padding: 8px 10px; }
+  .hero-video-frame figcaption { padding: 40px 16px 17px; }
+  .hero-video-frame figcaption strong { font-size: 21px; }
+  .hero-video-frame figcaption button { font-size: 8px; padding: 8px 10px; }
+  .doctor-video-grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .doctor-video-copy h2 { font-size: 37px; letter-spacing: -1.4px; }
+  .doctor-video-copy > p:not(.eyebrow) { font-size: 13px; }
+  .cinematic .patient-gallery { --slide-width: min(76vw,400px); }
+  .cinematic .patient-grid.gallery-track { gap: 16px; padding: 0 max(22px,calc((100% - var(--slide-width))/2)); scroll-padding-inline: max(22px,calc((100% - var(--slide-width))/2)); }
+  .cinematic .patient-gallery .patient-card { scroll-snap-align: center; }
+  .cinematic .stories-bottom { margin-top: 16px; }
+}
+@media (max-width: 600px) {
+  .hero-testimonial { inset: 8px 0 5px; }
+  .hero-video-frame { height: 100%; max-width: 76%; border-radius: 21px; }
+  .hero-video-frame figcaption { padding: 35px 14px 14px; }
+  .hero-video-frame figcaption > span { font-size: 7px; }
+  .hero-video-frame figcaption strong { font-size: 18px; }
+  .hero-video-frame figcaption button { font-size: 8px; }
+  .hero-video-controls { gap: 5px; }
+  .hero-video-controls button { font-size: 9px; padding: 7px 10px; }
+  .cinematic .hero-dental-layer > .dental-canvas { inset: -30px -5px -20px; }
+  .cinematic .hero-timeline { justify-content: flex-end; }
+  .doctor-video-grid { display: flex; flex-direction: column; align-items: stretch; gap: 35px; }
+  .doctor-video-copy h2 { font-size: 35px; }
+  .doctor-video-copy .eyebrow { margin-bottom: 23px; }
+  .doctor-video-copy > p:not(.eyebrow) { font-size: 14px; margin-top: 21px; }
+  .doctor-video-frame { align-self: center; width: min(100%,310px); }
+  .cinematic .smile-journey { height: 425svh; }
+}
+@media (min-width: 601px) and (max-width: 850px) {
+  .cinematic .story-layout { display: flex; flex-direction: column; gap: 0; }
+  .cinematic .story-visual { flex: 0 0 39%; height: 39%; width: 100%; min-height: 0; }
+  .cinematic .story-visual .dental-canvas { inset: -14px 0 30px; }
+  .cinematic .story-model-label { bottom: 20px; font-size: 8px; }
+  .cinematic .model-caption { bottom: 0; font-size: 6px; }
+  .cinematic .story-chapters { flex: 1; height: 0; width: 100%; }
+  .cinematic .story-step { justify-content: center; padding: 12px 0 8px; }
+  .cinematic .story-step h2 { font-size: 36px; line-height: 1.08; letter-spacing: -1.4px; }
+  .cinematic .story-step > p { font-size: 13px; line-height: 1.65; max-width: 540px; margin-top: 16px; }
+  .cinematic .chapter-number { margin-bottom: 13px; font-size: 10px; }
+  .cinematic .chapter-detail { padding-top: 13px; margin-top: 17px; font-size: 10px; }
+  .cinematic .chapter-detail svg { width: 23px; height: 23px; }
+  .cinematic .story-step .button { min-height: 44px; font-size: 11px; margin-top: 20px; }
+}

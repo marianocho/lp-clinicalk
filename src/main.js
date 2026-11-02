@@ -3,10 +3,13 @@ import "./cinema.css";
 import "./theme.css";
 import "./refinements.css";
 import "./smile-journey.css";
+import "./video-experience.css";
 import { createScrollCinema } from "./scroll-cinema.js";
 import { createGalleries } from "./galleries.js";
+import { createVideoPlayers } from './video-players.js';
 
 const galleries = createGalleries();
+const videoPlayers = createVideoPlayers();
 
 const icons = {
   whatsapp:
@@ -65,21 +68,26 @@ const videoTitles = {
   cida: "Cida — um novo sorriso, uma nova fase",
   pedro: "Pedro — confiança para sorrir de novo",
   barbara: "Bárbara — sua experiência com a LK",
-  fabiana: "A Dra. Fabiana explica o tratamento",
+  mariarosa: "Maria Rosa — sua experiência com a LK",
+  isaias: "Isaías — sua experiência com a LK",
+  hero: "Maria Rosa — uma experiência real com a LK",
 };
 // The clips are the existing, public clinic videos. They load only on request.
 const videos = {
   cida: "depo-cida",
   pedro: "depo-pedro",
   barbara: "depo-barbara",
-  fabiana: "fabi-servico",
+  mariarosa: "depo-mariarosa",
+  isaias: "depo-isaias",
+  hero: "depoimento-hero",
 };
 document.querySelectorAll("[data-video]").forEach((button) => {
   button.addEventListener("click", () => {
     const key = button.dataset.video;
+    videoPlayers.pauseBackground();
     document.querySelector("#video-title").textContent = videoTitles[key];
     video.src = `https://clinicalk.com.br/videos/${videos[key]}.mp4`;
-    video.poster = `/videos/${key}.jpg`;
+    video.poster = `/videos/${key === 'isaias' ? 'isaias-poster-v1' : key === 'mariarosa' ? 'depo-' + key : key === 'hero' ? 'depoimento-hero' : key}.jpg`;
     videoDialog.showModal();
     document.body.classList.add("modal-open");
     video.play().catch(() => {
@@ -92,6 +100,7 @@ videoDialog.addEventListener("close", () => {
   video.removeAttribute("src");
   video.load();
   document.body.classList.remove("modal-open");
+  videoPlayers.resumeHero();
 });
 const privacyDialog = document.querySelector("#privacy-dialog");
 document.querySelector("#privacy-open").addEventListener("click", () => {
@@ -134,22 +143,20 @@ let storyScene;
 const cinema = createScrollCinema({
   getHeroScene: () => heroScene,
   getStoryScene: () => storyScene,
+  onHeroVideoVisibility: value => videoPlayers.setHeroActive(value),
 });
 
-async function loadScenes() {
-  let createDentalScene;
+async function loadHeroScene() {
   try {
-    ({ createDentalScene } = await import("./dental-scene.js"));
-    heroScene = createDentalScene(document.querySelector("#hero-model"), {
-      dark: false,
-    });
+    const {createDentalScene} = await import('./dental-scene.js');
+    heroScene = createDentalScene(document.querySelector('#hero-model'), {dark:false});
   } catch (error) {
-    document.querySelector(".hero-art").classList.add("no-webgl");
-    console.info(
-      "Visualização 3D indisponível; ilustração alternativa ativa.",
-      error.message,
-    );
+    document.querySelector('.hero-art').classList.add('no-webgl');
+    console.info('Visualização 3D indisponível; ilustração alternativa ativa.',error.message);
   }
+  cinema.refresh();
+}
+async function loadStoryScene() {
   try {
     const { createDentalArchScene } = await import("./dental-arch-scene.js");
     storyScene = createDentalArchScene(document.querySelector("#story-model"));
@@ -163,7 +170,8 @@ async function loadScenes() {
   }
   cinema.refresh();
 }
-loadScenes();
+loadHeroScene();
+loadStoryScene();
 
 // The animation has a complete reading fallback when reduced motion is requested.
 motionPreference.addEventListener("change", () => {
@@ -183,6 +191,7 @@ document.querySelector("#year").textContent = String(new Date().getFullYear());
 if (import.meta.hot)
   import.meta.hot.dispose(() => {
     galleries.dispose();
+    videoPlayers.dispose();
     cinema.dispose();
     heroScene?.dispose();
     storyScene?.dispose();

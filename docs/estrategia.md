@@ -15,8 +15,8 @@ Fatos publicados e aproveitados:
 | Laboratório Kim dentro da clínica                       | Diferenciais e estrutura                      | Destaque inicial, capítulo 2 e seção de estrutura     |
 | Centro radiológico próprio, com tomografia e panorâmica | Diferenciais, avaliação e FAQ                 | Destaque inicial, capítulo 1 e estrutura              |
 | Equipe multidisciplinar e Dr. Kim                       | Seção da equipe                               | Apresentação humana com foto original                 |
-| Dra. Fabiana explica a reabilitação                     | Vídeo explicativo                             | Modal na seção da equipe                              |
-| Casos de Cida, Pedro, Sung e vídeos de outros pacientes | Casos e depoimentos                           | Fotos originais, avatares e três depoimentos em vídeo |
+| Dra. Fabiana explica a reabilitação                     | Vídeo explicativo                             | Seção própria antes dos capítulos do tratamento                              |
+| Casos de Cida, Pedro, Sung e vídeos de outros pacientes | Casos e depoimentos                           | Fotos originais, avatares e cinco depoimentos em vídeo |
 | Rua Correia Dias, 392, Paraíso, São Paulo               | Localização e rodapé                          | Seção final com link de rota                          |
 | Seg. a sex., 8h–19h                                     | Rodapé                                        | FAQ e contato                                         |
 | CRO-CL 15601; RT Chang Kook Kim, CROSP 46581            | Seção da equipe e rodapé                      | Equipe e rodapé                                       |
@@ -52,7 +52,7 @@ O serviço de busca web estava indisponível; a pesquisa foi feita pelo navegado
 
 Creme e bege formam a base da página. Azul noturno destaca o tratamento e o contato. Verde profundo e sálvia permanecem na identidade, nos títulos da abertura e nos botões principais. Jost, a fonte de “Tudo começa com uma conversa”, é a família universal do site. Os títulos usam peso 500, com escalas e espaçamentos ajustados para essa família. Fotografias reais aproximam a experiência da equipe e dos pacientes. O implante da abertura é um modelo procedural próprio. A dentição do tratamento usa uma renderização ilustrativa gerada com Imagegen, em camadas animadas com SVG. Os títulos das galerias e dos capítulos usam Jost para uma hierarquia mais direta.
 
-No celular, o contato antecede a ilustração. A narrativa usa uma área visual fixa superior, com conteúdo que muda na mesma posição. Na abertura permanece o implante unitário; no tratamento, a arcada completa contextualiza a leitura. A legenda informa que a animação é ilustrativa e que o tratamento depende de avaliação individual.
+No celular, o contato antecede a ilustração. A narrativa usa uma área visual fixa superior, com conteúdo que muda na mesma posição. Na abertura, o vídeo original de Maria Rosa antecede o implante unitário, que entra na segunda cena; no tratamento, a arcada completa contextualiza a leitura. A legenda informa que a animação é ilustrativa e que o tratamento depende de avaliação individual.
 
 ## Próxima medição
 
@@ -78,7 +78,7 @@ As cenas são ilustrativas, sem dados ou imagens de exames de pacientes. A abert
 
 Referência fornecida e percorrida no navegador em 2 de novembro de 2026: https://www.apple.com/macbook-pro/proled-xdr-display/.
 
-A implementação adapta a divisão em capítulos amplos, a hierarquia de títulos, a navegação compacta e as galerias horizontais com cartões arredondados e prévia do próximo item. No computador, as três histórias de pacientes aparecem juntas; no celular, continuam em um carrossel. A estrutura da clínica tem uma galeria independente com toque, trackpad, setas, indicadores e teclado. Os carrosséis não avançam sozinhos. O capítulo atual é indicado no cabeçalho; os controles do tratamento ficam em uma barra compacta na parte inferior. Nenhum código ou ativo da Apple foi reutilizado.
+A implementação adapta a divisão em capítulos amplos, a hierarquia de títulos, a navegação compacta e as galerias horizontais com cartões arredondados e prévia do próximo item. O carrossel reúne cinco histórias de pacientes: três cards aparecem por vez no computador, e um no celular, com os demais acessíveis pelos controles e por gesto horizontal. A estrutura da clínica tem uma galeria independente com toque, trackpad, setas, indicadores e teclado. Os carrosséis não avançam sozinhos. O capítulo atual é indicado no cabeçalho; os controles do tratamento ficam em uma barra compacta na parte inferior. Nenhum código ou ativo da Apple foi reutilizado.
 
 ## Ativo ilustrativo da dentição
 
@@ -108,3 +108,13 @@ Ao sair de “O que volta vai além do sorriso”, a dentição ilustrativa se a
 Tratamento, transição e pacientes compartilham uma única área fixa, evitando duplicar fotos ou repetir a seção ao sair da animação. A rolagem nativa controla a sequência nos dois sentidos. A geometria considera o enquadramento real do primeiro card, inclusive no celular. A imagem original da paciente não foi alterada.
 
 Os links “O tratamento”, “Histórias reais” e “Pular a animação” levam ao ponto correspondente da sequência. Cards e links fora de cena não recebem foco. Com movimento reduzido ou tela abaixo de 600px de altura, tratamento e pacientes voltam ao fluxo sequencial de leitura.
+
+## Vídeos e continuidade da rolagem
+
+Os cinco depoimentos do site original foram conferidos e mantidos: Cida, Pedro, Bárbara, Maria Rosa e Isaías. Os vídeos continuam servidos pela clínica, e os pôsteres ficam no projeto. O pôster limpo de Isaías (`isaias-poster-v1.jpg`) é um quadro extraído aos quatro segundos do vídeo oficial, sem geração ou alteração do rosto.
+
+A abertura usa `depoimento-hero.mp4`, com Maria Rosa, na área direita do título. O vídeo começa sem som, oferece controles de áudio e pausa e pode ser aberto por inteiro. A entrada do implante acompanha a passagem para “Precisão que transforma”. A explicação `fabi-servico.mp4` fica em uma seção própria com a Dra. Fabiana, antes do tratamento; a reprodução começa por clique e usa controles nativos. Os vídeos de fundo são pausados quando outro vídeo é aberto.
+
+A varredura do holograma passou a ocupar todo o primeiro capítulo, em vez de sair dos dentes cedo demais. A dentição SVG usa diretamente o mesmo quadro de rolagem dos textos, eliminando um segundo agendador e seu bloqueio por visibilidade. Os textos fazem uma transição curta e complementar; o percurso total foi encurtado para reduzir os períodos sem mudança perceptível. A carga da cena do tratamento é independente da carga do implante 3D. Os avisos de “role para avançar” foram retirados, mantendo a navegação direta por capítulos.
+
+Validação desta revisão: build e verificação sintática; reprodução dos vídeos novos e da Dra. Fabiana no navegador; troca vídeo/implante; progresso do scan, encaixe e sorriso final nos dois sentidos; galeria com cinco depoimentos e paginação responsiva.
