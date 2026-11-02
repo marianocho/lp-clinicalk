@@ -50,7 +50,7 @@ O serviço de busca web estava indisponível; a pesquisa foi feita pelo navegado
 
 ## Direção visual
 
-Creme e bege formam a base da página. Azul noturno destaca o tratamento e o contato. Verde profundo e sálvia permanecem na identidade, nos títulos da abertura e nos botões principais. Jost preserva a fonte de apoio original; Cormorant Garamond cria contraste editorial nos títulos. Fotografias reais aproximam a experiência da equipe e dos pacientes. O implante da abertura é um modelo procedural próprio. A dentição do tratamento usa uma renderização ilustrativa gerada com Imagegen, em camadas animadas com SVG. Os títulos das galerias e dos capítulos usam Jost para uma hierarquia mais direta.
+Creme e bege formam a base da página. Azul noturno destaca o tratamento e o contato. Verde profundo e sálvia permanecem na identidade, nos títulos da abertura e nos botões principais. Jost, a fonte de “Tudo começa com uma conversa”, é a família universal do site. Os títulos usam peso 500, com escalas e espaçamentos ajustados para essa família. Fotografias reais aproximam a experiência da equipe e dos pacientes. O implante da abertura é um modelo procedural próprio. A dentição do tratamento usa uma renderização ilustrativa gerada com Imagegen, em camadas animadas com SVG. Os títulos das galerias e dos capítulos usam Jost para uma hierarquia mais direta.
 
 No celular, o contato antecede a ilustração. A narrativa usa uma área visual fixa superior, com conteúdo que muda na mesma posição. Na abertura permanece o implante unitário; no tratamento, a arcada completa contextualiza a leitura. A legenda informa que a animação é ilustrativa e que o tratamento depende de avaliação individual.
 
@@ -78,7 +78,7 @@ As cenas são ilustrativas, sem dados ou imagens de exames de pacientes. A abert
 
 Referência fornecida e percorrida no navegador em 2 de novembro de 2026: https://www.apple.com/macbook-pro/proled-xdr-display/.
 
-A implementação adapta a divisão em capítulos amplos, a hierarquia de títulos, a navegação compacta e as galerias horizontais com cartões arredondados e prévia do próximo item. Histórias de pacientes e estrutura da clínica têm carrosséis independentes com toque, trackpad, setas, indicadores e teclado. Os carrosséis não avançam sozinhos. O capítulo atual é indicado no cabeçalho; os controles do tratamento ficam em uma barra compacta na parte inferior. Nenhum código ou ativo da Apple foi reutilizado.
+A implementação adapta a divisão em capítulos amplos, a hierarquia de títulos, a navegação compacta e as galerias horizontais com cartões arredondados e prévia do próximo item. No computador, as três histórias de pacientes aparecem juntas; no celular, continuam em um carrossel. A estrutura da clínica tem uma galeria independente com toque, trackpad, setas, indicadores e teclado. Os carrosséis não avançam sozinhos. O capítulo atual é indicado no cabeçalho; os controles do tratamento ficam em uma barra compacta na parte inferior. Nenhum código ou ativo da Apple foi reutilizado.
 
 ## Ativo ilustrativo da dentição
 
@@ -100,3 +100,11 @@ Color palette: warm natural ivory, very pale champagne highlights, restrained so
 Scene/backdrop: truly transparent alpha background, floating teeth only, no floor or shadow ellipse.
 Constraints: NO GUMS, NO lips, NO skin, NO tongue, NO bone, NO roots, NO jaw, NO pink tissue, NO pedestal, NO wireframe, NO annotations, NO text, NO objects around teeth. This is a polished illustrative dental asset, not a patient photograph. Teeth remain closed, no dark open mouth cavity.
 ```
+
+## Transição do planejamento para as pessoas
+
+Ao sair de “O que volta vai além do sorriso”, a dentição ilustrativa se alinha ao sorriso da foto original da Cida. Uma fusão curta e suave dá lugar ao sorriso real; o afastamento contínuo revela o retrato e termina no primeiro card. Pedro e Bárbara aparecem ao lado. O fundo passa do azul noturno ao creme durante essa sequência.
+
+Tratamento, transição e pacientes compartilham uma única área fixa, evitando duplicar fotos ou repetir a seção ao sair da animação. A rolagem nativa controla a sequência nos dois sentidos. A geometria considera o enquadramento real do primeiro card, inclusive no celular. A imagem original da paciente não foi alterada.
+
+Os links “O tratamento”, “Histórias reais” e “Pular a animação” levam ao ponto correspondente da sequência. Cards e links fora de cena não recebem foco. Com movimento reduzido ou tela abaixo de 600px de altura, tratamento e pacientes voltam ao fluxo sequencial de leitura.

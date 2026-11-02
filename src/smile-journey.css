@@ -1,0 +1,75 @@
+/* Jost is the single type family throughout the interface. */
+h1, h2, h3 { font-family: var(--sans); font-weight: 500; }
+em, h2 em { font-family: inherit; font-weight: inherit; font-style: normal; }
+h2 { line-height: 1.1; }
+.hero h1, .cinematic .hero h1 { font-size: clamp(64px,6.6vw,96px); font-weight: 500; letter-spacing: -4.8px; line-height: 1.03; }
+.hero-film-panel h2 { font-size: clamp(43px,4.8vw,68px); line-height: 1.08; }
+.team-copy h2, .faq-intro h2 { font-size: clamp(39px,3.6vw,54px); letter-spacing: -1.9px; }
+.contact h2 { font-size: clamp(44px,4.6vw,68px); letter-spacing: -2.7px; line-height: 1.1; }
+.contact-address h3 { font-size: 35px; letter-spacing: -1.2px; }
+.trust-number, .visit-grid li > span { font-weight: 500; }
+.smile-bridge, .journey-daylight { display: none; }
+
+/* One pinned viewport carries the planning chapters into the real portraits. */
+.cinematic .smile-journey { position: relative; height: 540svh; overflow: clip; }
+.cinematic .journey-pin { position: sticky; top: var(--header-height,72px); height: calc(100svh - var(--header-height,72px)); overflow: clip; isolation: isolate; background: #101a29; }
+.cinematic .smile-journey .story { position: absolute; inset: 0; height: 100%; padding: 0; z-index: 2; }
+.cinematic .smile-journey .story-pin { position: relative; top: 0; height: 100%; }
+.cinematic .journey-daylight { display: block; position: absolute; inset: 0; background: var(--paper); opacity: 0; z-index: 1; }
+.cinematic .smile-bridge { display: block; position: absolute; inset: 0; z-index: 5; visibility: hidden; pointer-events: none; }
+.smile-photo-frame { position: absolute; top: 0; left: 0; overflow: hidden; opacity: 0; will-change: transform,width,height; }
+.smile-photo, .smile-model { position: absolute; top: 0; left: 0; max-width: none; object-fit: fill; will-change: transform,width,height,opacity; }
+.smile-model { pointer-events: none; }
+.cinematic .smile-journey .stories {
+  display: flex; flex-direction: column; position: absolute; inset: 0; z-index: 3;
+  width: 100%; height: 100%; padding: clamp(28px,5svh,58px) 0 24px;
+  opacity: 0; pointer-events: none;
+}
+.cinematic .smile-journey .stories > .section-heading { flex: 0 0 auto; margin-bottom: 30px; }
+.cinematic .stories .section-heading h2 { font-size: clamp(38px,3.6vw,52px); line-height: 1.08; letter-spacing: -1.8px; }
+.cinematic .stories .section-heading .eyebrow { margin-bottom: 18px; font-size: 9px; }
+.cinematic .stories .section-aside { font-size: 12px; }
+.cinematic .stories .reveal { opacity: 1; transform: none; }
+.cinematic .patient-gallery { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.cinematic .patient-grid.gallery-track {
+  display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 24px;
+  flex: 1; min-height: 0; max-height: 540px; width: min(var(--wrap),calc(100% - 112px));
+  margin-inline: auto; padding: 0; overflow: visible; scroll-snap-type: none;
+}
+.cinematic .patient-gallery .patient-card { width: 100%; height: 100%; min-height: 0; }
+.cinematic .patient-gallery .gallery-controls { display: none; }
+.cinematic .stories-bottom { flex: 0 0 auto; margin-top: 24px; }
+.cinematic .stories-bottom p { font-size: 8px; }
+.cinematic .stories-bottom .text-link { margin-bottom: 0; }
+.smile-journey[data-scene="transition"] .patient-card:hover img { transform: none; }
+
+@media (max-width: 850px) {
+  .hero h1, .cinematic .hero h1 { font-size: clamp(55px,8vw,75px); letter-spacing: -3.5px; }
+  .cinematic .smile-journey .stories { padding-top: 30px; padding-bottom: 20px; }
+  .cinematic .stories > .section-heading { display: block; }
+  .cinematic .stories .section-aside { display: none; }
+  .cinematic .patient-grid.gallery-track {
+    display: flex; gap: 16px; width: 100%; margin: 0; max-height: 480px;
+    padding: 0 max(22px,calc((100% - var(--slide-width))/2));
+    overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
+  }
+  .cinematic .patient-gallery .patient-card { width: auto; flex: 0 0 var(--slide-width); height: 100%; }
+  .cinematic .patient-gallery .gallery-controls { display: flex; flex: 0 0 auto; margin-top: 15px; }
+  .cinematic .stories-bottom { margin-top: 18px; }
+}
+@media (max-width: 600px) {
+  .hero h1, .cinematic .hero h1 { font-size: clamp(43px,12.6vw,64px); letter-spacing: -2.2px; line-height: 1.07; }
+  .hero-film-panel h2 { font-size: 40px; letter-spacing: -1.6px; }
+  .team-copy h2, .faq-intro h2 { font-size: 36px; letter-spacing: -1.4px; }
+  .contact h2 { font-size: 40px; letter-spacing: -1.7px; }
+  .contact-address h3 { font-size: 30px; }
+  .cinematic .smile-journey { height: 530svh; }
+  .cinematic .smile-journey .stories { padding-top: 28px; padding-bottom: 22px; }
+  .cinematic .smile-journey .stories > .section-heading { margin-bottom: 25px; }
+  .cinematic .stories .section-heading h2 { font-size: 30px; letter-spacing: -1px; line-height: 1.12; }
+  .cinematic .stories .section-heading .eyebrow { font-size: 7px; margin-bottom: 15px; }
+  .cinematic .patient-grid.gallery-track { max-height: 440px; }
+  .cinematic .stories-bottom { margin-top: 17px; gap: 10px; }
+  .cinematic .stories-bottom p { font-size: 6px; line-height: 1.5; }
+  .cinematic .stories-bottom .text-link { font-size: 10px; padding-block: 3px; }
+}

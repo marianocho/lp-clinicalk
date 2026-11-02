@@ -1,3 +1,5 @@
+import {createSmileBridge, STORY_END, SMILE_END} from './smile-bridge.js';
+
 const clamp = (n, low = 0, high = 1) => Math.max(low, Math.min(high, n));
 const smooth = (start, end, value) => {
   const t = clamp((value - start) / (end - start));
@@ -12,8 +14,11 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
   const header = document.querySelector(".header-inner");
   const hero = document.querySelector(".hero");
   const story = document.querySelector(".story");
+  const journey = document.querySelector('.smile-journey');
+  const stories = document.querySelector('#historias');
   const heroPin = document.querySelector(".hero-pin");
-  const storyPin = document.querySelector(".story-pin");
+  const storyPin = document.querySelector('.journey-pin');
+  const smileBridge = createSmileBridge({journey, pin:storyPin, story, stories});
   const heroPanels = [
     document.querySelector(".hero-copy"),
     ...document.querySelectorAll(".hero-film-panel"),
@@ -100,8 +105,14 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
     scheduled = false;
     if (disposed) return;
     const heroRect = hero.getBoundingClientRect();
-    const storyRect = story.getBoundingClientRect();
-    const currentSection = navigationSections.filter(section => section.getBoundingClientRect().top <= innerHeight * .35).at(-1);
+    const storyRect = journey.getBoundingClientRect();
+    const journeyDistance = Math.max(0, journey.offsetHeight - storyPin.offsetHeight);
+    const sectionTop = section => {
+      if (enabled && section === story) return storyRect.top;
+      if (enabled && section === stories) return storyRect.top + journeyDistance * SMILE_END;
+      return section.getBoundingClientRect().top;
+    };
+    const currentSection = navigationSections.filter(section => sectionTop(section) <= innerHeight * .35).at(-1);
     navigation.forEach(({link,section}) => section === currentSection ? link.setAttribute('aria-current','location') : link.removeAttribute('aria-current'));
     const insideStory =
       enabled &&
@@ -115,14 +126,18 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
     );
     if (enabled) {
       const heroProgress = progressFor(hero, heroPin);
-      const storyProgress = progressFor(story, storyPin);
+      const journeyProgress = progressFor(journey, storyPin);
+      const storyProgress = clamp(journeyProgress / STORY_END);
+      journey.style.setProperty('--journey-progress',journeyProgress.toFixed(4));
       hero.style.setProperty("--hero-progress", heroProgress.toFixed(4));
       story.style.setProperty("--story-progress", storyProgress.toFixed(4));
       paintPanels(heroPanels, heroButtons, heroProgress, true);
       paintPanels(storyPanels, storyButtons, storyProgress, false);
       getHeroScene()?.setIntroProgress(heroProgress);
       getStoryScene()?.setTimelineProgress(storyProgress);
+      smileBridge.update(journeyProgress,true);
     } else {
+      smileBridge.update(0,false);
       // The complete original reading flow remains available without pinned scenes.
       let current = 0;
       storyPanels.forEach((panel, i) => {
@@ -176,30 +191,55 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
     requestUpdate();
   }
 
-  function seek(section, pin, index) {
+  function seek(section, pin, index, treatment = false) {
     const points = [0.04, 0.48, 0.88];
     const top = scrollY + section.getBoundingClientRect().top - headerHeight;
     const distance = Math.max(0, section.offsetHeight - pin.offsetHeight);
     window.scrollTo({
-      top: top + points[index] * distance,
+      top: top + points[index] * distance * (treatment ? STORY_END : 1),
       behavior: motion.matches ? "instant" : "smooth",
     });
   }
   const buttonListeners = [];
   [
-    [heroButtons, hero, heroPin],
-    [storyButtons, story, storyPin],
-  ].forEach(([buttons, section, pin]) => {
+    [heroButtons, hero, heroPin, false],
+    [storyButtons, journey, storyPin, true],
+  ].forEach(([buttons, section, pin, treatment]) => {
     buttons.forEach((button, i) => {
-      const handler = () => seek(section, pin, i);
+      const handler = () => seek(section, pin, i, treatment);
       button.addEventListener("click", handler);
       buttonListeners.push([button, handler]);
     });
   });
+  function seekChapter(hash, animate = true) {
+    if (!enabled || !['#tratamento','#historias'].includes(hash)) return;
+    const fraction = hash === '#historias' ? SMILE_END + .012 : .02;
+    const top = scrollY + journey.getBoundingClientRect().top - headerHeight;
+    const distance = Math.max(0,journey.offsetHeight - storyPin.offsetHeight);
+    window.scrollTo({top:top + distance * fraction, behavior:animate ? 'smooth' : 'instant'});
+  }
+  function followChapterHash(animate = true) { seekChapter(location.hash,animate); }
+  document.querySelectorAll('a[href="#tratamento"],a[href="#historias"]').forEach(link => {
+    const handler = event => {
+      if (!enabled || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      const hash = link.getAttribute('href');
+      if (location.hash !== hash) history.pushState(null,'',hash);
+      seekChapter(hash);
+    };
+    link.addEventListener('click',handler);
+    buttonListeners.push([link,handler]);
+  });
+  const onHashChange = () => followChapterHash();
+  addEventListener('hashchange',onHashChange);
   addEventListener("scroll", requestUpdate, { passive: true });
   addEventListener("resize", refresh, { passive: true });
   motion.addEventListener("change", refresh);
-  document.fonts.ready.then(refresh);
+  const initialHash = location.hash;
+  document.fonts.ready.then(() => {
+    refresh();
+    if (initialHash && location.hash === initialHash) followChapterHash(false);
+  });
   refresh();
 
   return {
@@ -209,6 +249,8 @@ export function createScrollCinema({ getHeroScene, getStoryScene }) {
       removeEventListener("scroll", requestUpdate);
       removeEventListener("resize", refresh);
       motion.removeEventListener("change", refresh);
+      removeEventListener('hashchange',onHashChange);
+      smileBridge.dispose();
       buttonListeners.forEach(([button, handler]) =>
         button.removeEventListener("click", handler),
       );

@@ -2,6 +2,7 @@ import "./style.css";
 import "./cinema.css";
 import "./theme.css";
 import "./refinements.css";
+import "./smile-journey.css";
 import { createScrollCinema } from "./scroll-cinema.js";
 import { createGalleries } from "./galleries.js";
 

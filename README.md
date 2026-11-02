@@ -27,9 +27,11 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 - Experiência, Laboratório Kim e centro radiológico apresentam os diferenciais.
 - A abertura tem três cenas fixas: a rolagem gira, aproxima, separa e reúne o implante, enquanto o conteúdo muda dentro da mesma composição.
 - O tratamento fica fixo em três capítulos: raios escaneiam dentes em holograma; quatro dentes holográficos se encaixam em uma dentição sólida; o sorriso fechado aparece com acabamento suave. Não há mastigação, mandíbula ou oval fixo. A rolagem controla toda a sequência, inclusive o retorno.
+- Jost é a família universal, incluindo títulos, textos, navegação e botões.
 - A abertura usa creme e bege. A sequência do tratamento e o contato usam azul noturno, com contrastes em marfim e champanhe.
 - Os indicadores de cena permitem ir diretamente a um capítulo. “Pular a animação” leva às histórias dos pacientes. O cabeçalho mantém acesso ao agendamento.
-- Galerias horizontais de histórias reais e da estrutura da clínica, com cartões amplos, indicadores, setas, toque e teclado. Vídeos de Cida, Pedro e Bárbara em modal; vídeo explicativo da Dra. Fabiana na seção da equipe.
+- No fim do tratamento, os dentes se fundem ao sorriso real da Cida. O zoom se afasta até o primeiro card, enquanto Pedro e Bárbara aparecem ao lado. A foto original permanece intacta.
+- As três histórias aparecem juntas no computador; no celular, em carrossel. A estrutura da clínica mantém sua galeria horizontal, com indicadores, setas, toque e teclado. Vídeos de Cida, Pedro e Bárbara em modal; vídeo explicativo da Dra. Fabiana na seção da equipe.
 - Estrutura, equipe, primeira consulta, perguntas frequentes e localização completam o percurso.
 - WhatsApp acessível no cabeçalho, nas seções de decisão e em botão flutuante.
 
@@ -42,6 +44,7 @@ A saída de produção fica em `dist/`. Pode ser servida por qualquer hospedagem
 - `src/dental-arch-scene.js`: composição SVG em camadas, holograma, raios, encaixe e dentição fechada.
 - `src/galleries.js`: carrosséis com rolagem nativa, controles e estado acessível.
 - `src/refinements.css`: refinamentos de capítulos, navegação, galerias e dentição.
+- `src/smile-bridge.js` e `src/smile-journey.css`: transição dos dentes à fotografia, câmera, área fixa compartilhada, cards e tipografia universal.
 - `src/theme.css`: cores creme e azul noturno.
 - `src/scroll-cinema.js` e `src/cinema.css`: cenas fixas, transições, progresso e navegação da animação.
 - `public/`: identidade, fotos reais e fontes locais.
